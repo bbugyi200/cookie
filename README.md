@@ -1,5 +1,8 @@
 # Mini CookieCutter
 
+Usage: `minicc [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}]
+            [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
+
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
 is opened in vim.

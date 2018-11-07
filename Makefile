@@ -1,6 +1,6 @@
 bindir=$(prefix)/usr/bin
 
-install: minicc config
+install: minicc
 	[ -d $(bindir) ] || mkdir -p $(bindir)
 	cp minicc $(bindir)/minicc
 	chmod +x $(bindir)/minicc
