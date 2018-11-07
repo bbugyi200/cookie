@@ -1,4 +1,4 @@
-# Mini CookieCutter
+# Mini-CookieCutter
 
 Usage: `minicc [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
 
@@ -56,10 +56,29 @@ Templates should be stored in the `$XDG_DATA_HOME/minicc` directory and must hav
 the following format: `[{NAME}.]{ID}.{FILETYPE}` where `{NAME}` is optional and
 can be used as a custom specifier for the template, `{ID}` is an integer, and `{FILETYPE}` is the filetype of the template.
 
+It is important to note that `{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
+
 See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/home/.local/share/minicc) for examples on how you can use templates.
 
-##### NOTE
-`{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
+### Template Declarations and Substitutions
+While no where near as full-featured as the jinja2 template engine that [cookiecutter](https://github.com/audreyr/cookiecutter) uses, there are a few special statements avaiable. The syntax will be familiar if you have used jinja2 before:
+
+##### Mark Start Point for Editor
+If the following statement is found in the template, vim will start with the cursor
+on that line (after removing the statement) and will start in INSERT mode:
+```
+{% START HERE %}
+```
+
+##### Variable Substitution
+Mini-CookieCutter also recognizes the following special statement:
+```
+{{ env.foobar }}
+```
+where `foobar` represents an environment variable. This statement will be replaced
+with the value of the environment variable `foobar`. If `foobar` is not defined,
+the initialization process will hault and `minicc` will exit with a non-zero
+status.
 
 ## Configuration File
 
@@ -85,6 +104,23 @@ DEFAULT_BIN_SUBDIR=
 # The $TARGET variable, which contains the full path of the target file,
 # will be injected into the environment of this command.
 EXEC_HOOK_CMD=
+```
+
+## Useful Shell Aliases / Functions
+
+You can of course run the `minicc` script directly, but I have not found that to
+be very convenient. Instead, I have created a variety of shell aliases and
+functions which serve as custom initialization commands that are specific to a
+single goal and filetype. Here are a few examples:
+
+``` bash
+alias ainit='minicc -F awk -D awk --use-extension=y'
+alias binit='minicc -F sh'
+alias Binit='minicc -F sh -T full'
+hw() { ASSIGNMENT_NUMBER="$1" minicc -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
+alias pyinit='minicc -F python'
+alias Pyinit='minicc -F python -T test -f --executable=n --use-extension=y'
+alias texinit='minicc -F tex -f --executable=n --use-extension=y'
 ```
 
 ## Installation

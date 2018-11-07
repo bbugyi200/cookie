@@ -3,7 +3,7 @@
 # shellcheck disable=SC1090
 
 read -r -d '' doc << EOM
-Mini CookieCutter (inspired by cookiecutter)
+Mini-CookieCutter (inspired by cookiecutter)
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
@@ -285,7 +285,7 @@ fi
 
 # ===== Custom Template Engine =====
 # >>> START
-start_mark="{# START #}"
+start_mark="{% START HERE %}"
 start_line="$(ag "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
 sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"
 
