@@ -28,14 +28,14 @@ PARENT_BIN_DIR=
 
 # The target file is initialized in $PARENT_BIN_DIR/$DEFAULT_BIN_SUBDIR
 # unless the `-D {DIR}` option is used. In which case the target file will
-# be initialized to $PARENT_BIN_DIR/{DIR}
+# be initialized to $PARENT_BIN_DIR/{DIR}.
 DEFAULT_BIN_SUBDIR=
 
 # If specified, this command is evaluated after (and if) the target file
 # has its executable bit set. This can be used to create symlinks to
 # the target file (using `stow`, for example).
 #
-# The $TARGET--which contains the full path of the target file--variable
+# The $TARGET variable, which contains the full path of the target file,
 # will be injected into the environment of this command.
 EXEC_HOOK_CMD=
 EOM
@@ -77,7 +77,7 @@ function open_editor() {
 }
 
 # ---------- Command-line Arguments ----------
-eval set -- "$(getopt -o "d,D:,f,F:,h,N,T:,v,x" -l "debug,docs:,bin-directory:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
+eval set -- "$(getopt -o "d,D:,f,F:,h,N,T:,v,x" -l "debug,docs:,bin-subdir:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
 
 usage="${usage} [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
 scriptname="${scriptname}"
@@ -86,6 +86,46 @@ read -r -d '' help << EOM
 ${usage^}
 
 ${doc}
+
+Command-line Options:
+    -d | --debug
+        Enable debug mode.
+
+    -D DIR | --bin-subdir DIR
+        Initialize TARGET into DIR, which should be a subdirectory of the
+        default bin directory (see the configuration file).
+
+    --executable={y|n}
+        Make TARGET executable. Defaults to 'y'.
+
+    -f | --force
+        Force TARGET initialization to be relative to the current
+        directory.
+
+    -F FILETYPE | --filetype FILETYPE
+        The filetype of the template. The TARGET (once initialized) will
+        share this filetype.
+
+    -h | --help
+        View this help message.
+
+    -N
+        Equivalent to --executable=n.
+
+    -T ID | --template-id ID
+        Specify the desired template's identifier. May be either the template's
+        numerical identifier or its more friendly (and optional) specifier.
+        e.g. The template 'foo.2.python' can be specified by using either '2'
+        or 'foo' as the template id.
+
+    --use-extension={y|n}
+        Append file extension to TARGET. Defaults to 'n'.
+
+    -x
+        Equivalent to --use-extension=y
+
+    -v | --verbose
+        Enable verbose output.
 EOM
 
 executable="y"
@@ -100,7 +140,7 @@ while [[ -n "$1" ]]; do
            echo "$help"
            exit 0
            ;;
-       -D|--bin-directory )
+       -D|--bin-subdir )
            shift
            BIN_SUBDIR="$1"
            ;;
