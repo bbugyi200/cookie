@@ -1,0 +1,19 @@
+# The target file will be initialized in a location relative to this directory
+# unless you specify the `-f` option. In which case the target file will be
+# initialized relative to the current directory.
+#
+# Defaults to "./" (the current directory).
+PARENT_BIN_DIR=
+
+# The target file is initialized in $PARENT_BIN_DIR/$DEFAULT_BIN_SUBDIR
+# unless the `-D {DIR}` option is used. In which case the target file will
+# be initialized to $PARENT_BIN_DIR/{DIR}
+DEFAULT_BIN_SUBDIR=
+
+# If specified, this command is evaluated after (and if) the target file
+# has its executable bit set. This can be used to create symlinks to
+# the target file (using `stow`, for example).
+#
+# The $TARGET--which contains the full path of the target file--variable
+# will be injected into the environment of this command.
+EXEC_HOOK_CMD=

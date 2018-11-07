@@ -1,0 +1,265 @@
+#!/bin/bash
+
+# shellcheck disable=SC1090
+
+read -r -d '' doc << EOM
+Mini CookieCutter (inspired by cookiecutter)
+
+Initializes TARGET file using a predefined template. TARGET can be a new script,
+configuration file, markup file, etc.... After TARGET has been initialized, it
+is opened in vim.
+EOM
+
+# ---------- Source Libraries / Configs ----------
+source /usr/lib/gutils.sh
+my_xdg_config="${my_xdg_config}"
+my_xdg_data="${my_xdg_data}"
+
+[ -d "${my_xdg_config}" ] || mkdir -p "${my_xdg_config}"
+[ -d "${my_xdg_data}" ] || mkdir -p "${my_xdg_data}"
+
+read -r -d '' default_config << "EOM"
+# The target file will be initialized in a location relative to this directory
+# unless you specify the `-f` option. In which case the target file will be
+# initialized relative to the current directory.
+#
+# Defaults to "./" (the current directory).
+PARENT_BIN_DIR=
+
+# The target file is initialized in $PARENT_BIN_DIR/$DEFAULT_BIN_SUBDIR
+# unless the `-D {DIR}` option is used. In which case the target file will
+# be initialized to $PARENT_BIN_DIR/{DIR}
+DEFAULT_BIN_SUBDIR=
+
+# If specified, this command is evaluated after (and if) the target file
+# has its executable bit set. This can be used to create symlinks to
+# the target file (using `stow`, for example).
+#
+# The $TARGET--which contains the full path of the target file--variable
+# will be injected into the environment of this command.
+EXEC_HOOK_CMD=
+EOM
+
+if [[ -f "${my_xdg_config}"/config ]]; then
+    source "${my_xdg_config}"/config
+else
+    echo "${default_config}" > "${my_xdg_config}"/config
+fi
+
+# Set default bin directory if not specified in config file.
+if [[ -z "${PARENT_BIN_DIR}" ]]; then
+    PARENT_BIN_DIR=./
+fi
+
+# ---------- Function Definitions ----------
+function find_templates() {
+    id="$1"; shift
+    filetype="$1"; shift
+
+    if [[ "${id}" =~ ^[0-9]+$ ]]; then
+        name="*${id}.${filetype}"
+    else
+        name="${id}*.${filetype}"
+    fi
+
+    find -L "${my_xdg_data}" -name "${name}"
+}
+
+function open_editor() {
+    start_line="$1"; shift
+    Vim_Opts=()
+    if [[ -n "${start_line}" ]]; then
+        Vim_Opts+=( +"${start_line}" +startinsert )
+    fi
+
+    vim "${Vim_Opts[@]}" "${FULL_NEW_SCRIPT_NAME}"
+    exit 0
+}
+
+# ---------- Command-line Arguments ----------
+eval set -- "$(getopt -o "d,D:,f,F:,h,N,T:,v,x" -l "debug,docs:,bin-directory:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
+
+usage="${usage} [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
+scriptname="${scriptname}"
+
+read -r -d '' help << EOM
+${usage^}
+
+${doc}
+EOM
+
+executable="y"
+use_extension="n"
+template_id=1
+while [[ -n "$1" ]]; do
+    case $1 in
+       -d|--debug )
+           debug=true
+           ;;
+       -h|--help )
+           echo "$help"
+           exit 0
+           ;;
+       -D|--bin-directory )
+           shift
+           BIN_SUBDIR="$1"
+           ;;
+       --docs )
+           shift
+           doc_varname="$1"
+           ;;
+       --executable )
+           shift
+           executable="$1"
+           ;;
+       -f )
+           force=true
+           ;;
+       -F|--filetype )
+           shift
+           FILETYPE="$1"
+           ;;
+       -N )
+           executable="n"
+           ;;
+       --use-extension )
+           shift
+           use_extension="$1"
+           ;;
+       -T|--template-id )
+           shift
+           template_id="$1"
+           ;;
+       -v|--verbose )
+           verbose=true
+           ;;
+       -x )
+           use_extension="y"
+           ;;
+       -- )
+           shift
+           break
+           ;;
+    esac
+    shift
+done
+
+if [[ "${debug}" = true && "${verbose}" = true ]]; then
+    PS4='$LINENO: '
+    set -x
+fi
+
+if [[ -n "${doc_varname}" ]]; then
+   eval "printf \"\${${doc_varname}}\n\""
+   exit 0 
+fi
+
+if [[ -z "$1" ]] || [[ -z "$FILETYPE" ]]; then
+    die "${usage}" 2
+fi
+
+# ---------- Traps ----------
+function exit_handler() {
+    EC="$1"; shift
+
+    if [[ "${parent_dir_created}" = true && "${EC}" -ne 0 ]]; then
+        dmsg "Removing directory: ${FULL_BIN_PATH}"
+        rm -rf "${FULL_BIN_PATH}"
+    fi
+}
+
+trap 'exit_handler $?' EXIT
+
+# ---------- Global Variables ----------
+NEW_SCRIPT_NAME="$1"; shift
+EXT="${FILETYPE}"
+
+# ---------- Main ----------
+# ===== Special Filetype Customizations =====
+case "$FILETYPE" in
+    python )
+        EXT="py"
+        ;;
+esac
+
+# ===== Calculate Filesystem Paths =====
+if [[ "$(pwd)" == "$PARENT_BIN_DIR/"* && -z "$BIN_SUBDIR" ]] || [[ "$force" = true ]]; then
+    FULL_BIN_PATH="$(pwd)"
+elif [[ -z "$BIN_SUBDIR" ]]; then
+    FULL_BIN_PATH="$PARENT_BIN_DIR"/"$DEFAULT_BIN_SUBDIR"
+else
+    FULL_BIN_PATH="$PARENT_BIN_DIR"/"$BIN_SUBDIR"
+fi
+
+NEW_SCRIPT_PARENT_DIR="$(dirname "${NEW_SCRIPT_NAME}")"
+if [[ "${NEW_SCRIPT_PARENT_DIR}" != "." ]]; then
+    FULL_BIN_PATH="${FULL_BIN_PATH}"/"${NEW_SCRIPT_PARENT_DIR}"
+    NEW_SCRIPT_NAME="$(basename "${NEW_SCRIPT_NAME}")"
+fi
+
+if [[ "$(pwd)" != "$FULL_BIN_PATH" ]]; then
+    if ! [[ -d "${FULL_BIN_PATH}" ]]; then
+        dmsg "Creating directory: ${FULL_BIN_PATH}"
+        mkdir -p "${FULL_BIN_PATH}"
+        parent_dir_created=true
+    fi
+
+    cd "$FULL_BIN_PATH" || exit 1
+    imsg "Entering $FULL_BIN_PATH."
+fi
+
+if [[ "${use_extension}" == "y" || "${use_extension}" == "yes" ]]; then
+    FULL_NEW_SCRIPT_NAME="${NEW_SCRIPT_NAME}.${EXT}"
+else
+    FULL_NEW_SCRIPT_NAME="${NEW_SCRIPT_NAME}"
+fi
+
+number_of_templates="$(find_templates "${template_id}" "${FILETYPE}" | wc -l)"
+if [[ "${number_of_templates}" -eq 0 ]]; then
+    die "Failed to find any matching templates."
+elif [[ "${number_of_templates}" -gt 1 ]]; then
+    die "Multiple templates matched. Template must be unique."
+fi
+
+FULL_TEMPLATE_NAME=$(find_templates "${template_id}" "${FILETYPE}")
+imsg "Found matching template: $(basename "${FULL_TEMPLATE_NAME}")"
+
+# ===== Initialize New Script =====
+# >>> Copy Template Contents to New Script
+if ! [[ -f "$FULL_NEW_SCRIPT_NAME" ]]; then
+    imsg "Initializing the '$FULL_NEW_SCRIPT_NAME' script."
+    sudo cp "${FULL_TEMPLATE_NAME}" "${FULL_NEW_SCRIPT_NAME}"
+    sudo chown "$USER":"$USER" "${FULL_NEW_SCRIPT_NAME}"
+else
+    imsg "The '$FULL_NEW_SCRIPT_NAME' script already exists."
+    open_editor "${start_line}"
+fi
+
+# >>> Make New Script Executable
+if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
+    sudo chmod +x "$FULL_NEW_SCRIPT_NAME"
+    if [[ -n "${EXEC_HOOK_CMD}" ]]; then
+        eval "TARGET=${FULL_NEW_SCRIPT_NAME} ${EXEC_HOOK_CMD}"
+    fi
+fi
+
+# ===== Custom Template Engine =====
+# >>> START
+start_mark="{# START #}"
+start_line="$(ag "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
+sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"
+
+# >>> Environment Variable Replacements
+grep_epttrn="{{ env\.(.*?) }}"
+sed_epttrn="{{ env\.\([^ ]*\) }}"
+while read evar; do
+    evalue="$(eval "echo \"\$${evar}\"")"
+    if [[ -z "${evalue}" ]]; then
+        die "Environment variable NOT defined: \$${evar}"
+    fi
+
+    sed -i "s/${sed_epttrn}/${evalue}/" "${FULL_NEW_SCRIPT_NAME}"
+done < <(grep -P -o "${grep_epttrn}" "${FULL_NEW_SCRIPT_NAME}" | sed "s/${sed_epttrn}/\1/")
+
+# ===== Open New Script in Editor =====
+open_editor "${start_line}"
