@@ -60,8 +60,15 @@ It is important to note that `{FILETYPE}` is decided by vim and will NOT always 
 
 See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/home/.local/share/minicc) for examples on how you can use templates.
 
+##### Why do I need the {ID} part of the template syntax?
+The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
+```
+nnoremap <Leader>0t :n ~/.local/share/minycc/*1.<C-R>=&filetype<CR><CR>
+nnoremap <Leader>0T :n ~/.local/share/minycc/*2.<C-R>=&filetype<CR><CR>
+```
+
 ### Template Declarations and Substitutions
-While no where near as full-featured as the jinja2 template engine that [cookiecutter](https://github.com/audreyr/cookiecutter) uses, there are a few special statements avaiable. The syntax will be familiar if you have used jinja2 before:
+While no where near as full-featured as the [jinja2](https://github.com/pallets/jinja) template engine that [cookiecutter](https://github.com/audreyr/cookiecutter) uses, there are a few special statements avaiable. The syntax will be familiar if you have used [jinja2](https://github.com/pallets/jinja) in the past:
 
 ##### Mark Start Point for Editor
 If the following statement is found in the template, vim will start with the cursor
@@ -123,6 +130,28 @@ alias Pyinit='minicc -F python -T test -f --executable=n --use-extension=y'
 alias texinit='minicc -F tex -f --executable=n --use-extension=y'
 ```
 
+## Examples
+
+Let us now take a look at a few examples of how Mini-CookieCutter might be useful. 
+
+For reference, these are the configuration settings that I use:
+``` bash
+PARENT_BIN_DIR="/home/bryan/Dropbox/bin"
+DEFAULT_BIN_SUBDIR="main"
+EXEC_HOOK_CMD=/usr/local/bin/clinks
+```
+where `/home/bryan/Dropbox/bin` is a home for [this](https://github.com/bbugyi200/scripts) GitHub repository. (The [clinks](https://github.com/bbugyi200/scripts/blob/master/main/clinks) script wraps a bunch of `stow` commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized and structured.)
+
+To initialize a minimal bash script named `foo` into the `main` directory (where I keep most of my scripts), I could run the following command:
+```
+binit foo
+```
+However, suppose instead that I wanted to initialize a new productivity script named `bar` into the `GTD` directory. Furthermore, suppose that I know that `bar` might get complicated (and thus needs to scale well). I could then choose to run
+```
+Binit -D GTD bar
+```
+to initialize a full featured bash script (bells and whistles included) into the `GTD` directory.
+
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/minicc` and then running `make install`.
+Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/minicc`, going into the project directory (`cd minicc`), and then running `make install`.
