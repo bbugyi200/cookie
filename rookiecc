@@ -288,8 +288,8 @@ start_line="$(ag "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $
 sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"
 
 # >>> Environment Variable Replacements
-grep_epttrn="{{ env\.(.*?) }}"
-sed_epttrn="{{ env\.\([^ ]*\) }}"
+grep_epttrn="{{ (.*?) }}"
+sed_epttrn="{{ \([^ ]*\) }}"
 
 exec 5>&1  # save STDIN
 while read evar; do

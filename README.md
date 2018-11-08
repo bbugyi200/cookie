@@ -70,7 +70,7 @@ nnoremap <Leader>0t :n ~/.local/share/rookiecc/*1.<C-R>=&filetype<CR><CR>
 nnoremap <Leader>0T :n ~/.local/share/rookiecc/*2.<C-R>=&filetype<CR><CR>
 ```
 
-### Template Declarations and Substitutions
+### Template Variables and Statements
 While no where near as full-featured as the [jinja2](https://github.com/pallets/jinja) template engine that [cookiecutter](https://github.com/audreyr/cookiecutter) uses, there are a few special statements avaiable. The syntax will be familiar if you have used [jinja2](https://github.com/pallets/jinja) in the past:
 
 ##### Mark Start Point for Editor
@@ -81,17 +81,15 @@ on that line (after removing the statement) and will start in INSERT mode:
 ```
 
 ##### Variable Substitution
-rookie-cookiecutter also recognizes the following special statement:
+rookie-cookiecutter also recognizes template variables of the form:
 ```
-{{ env.foobar }}
+{{ foobar }}
 ```
-where `foobar` represents an environment variable. This statement will be replaced
-with the value of the environment variable `foobar`. If `foobar` is not defined,
-the user will be prompted for a value on the command-line.
+This string will be replaced by the value of the environment variable `foobar` if it exists. Otherwise, the user will be prompted to provide a value for `foobar` on the command-line.
 
 ## Configuration File
 
-The `rookiecc` script looks for a configuration file at `$XDG_CONFIG_HOME/rookiecc/config`. The following settings are available:
+The `rookiecc` script looks for a configuration file at `$XDG_CONFIG_HOME/rookiecc/config`. The following options are available:
 
 ``` bash
 # The target file will be initialized in a location relative to this directory
