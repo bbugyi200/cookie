@@ -73,7 +73,6 @@ function open_editor() {
     fi
 
     vim "${Vim_Opts[@]}" "${FULL_NEW_SCRIPT_NAME}"
-    exit 0
 }
 
 # ---------- Command-line Arguments ----------
@@ -271,6 +270,7 @@ if ! [[ -f "$FULL_NEW_SCRIPT_NAME" ]]; then
 else
     imsg "The '$FULL_NEW_SCRIPT_NAME' script already exists."
     open_editor "${start_line}"
+    exit 0
 fi
 
 # >>> Make New Script Executable
