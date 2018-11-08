@@ -1,0 +1,3 @@
+[submodule "bashlibs"]
+	path = bashlibs
+	url = git@github.com:bbugyi200/bashlibs
