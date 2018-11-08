@@ -1,8 +1,8 @@
-bindir=$(prefix)/usr/bin
+bindir=$(DESTDIR)/usr/bin
 project=rookiecc
 
 install: ${project}
-	make -C bashlibs prefix=$(prefix) install
+	make -C bashlibs DESTDIR=$(DESTDIR) install
 	[ -d $(bindir) ] || mkdir -p $(bindir)
 	cp ${project} $(bindir)/${project}
 	chmod +x $(bindir)/${project}
