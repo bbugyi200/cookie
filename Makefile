@@ -1,20 +1,21 @@
 bindir=$(DESTDIR)/usr/bin
 script=rookiecc
 
+.PHONY: install uninstall uninstall-all
+
 install: install-gutils $(bindir) ${script}
-	[ -d $(bindir) ] || mkdir -p $(bindir)
 	cp ${script} $(bindir)/${script}
 	chmod +x $(bindir)/${script}
 
-install-gutils:
+install-gutils: bashlibs/gutils.sh
 ifeq (,$(wildcard /usr/lib/gutils.sh))
 	make -C bashlibs DESTDIR=$(DESTDIR) install
 endif
 
 $(bindir):
-	[ -d $(bindir) ] || mkdir -p $(bindir)
+	@mkdir -p $(bindir)
 
-uninstall:
+uninstall: $(bindir)/$(script)
 	rm $(bindir)/$(script)
 
 uninstall-all: uninstall
