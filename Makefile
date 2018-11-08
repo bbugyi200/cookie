@@ -2,7 +2,7 @@ bindir=$(prefix)/usr/bin
 project=rookiecc
 
 install: ${project}
-	make -C bashlibs install
+	make -C bashlibs prefix=$(prefix) install
 	[ -d $(bindir) ] || mkdir -p $(bindir)
 	cp ${project} $(bindir)/${project}
 	chmod +x $(bindir)/${project}
