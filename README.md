@@ -154,4 +154,4 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/minicc`, going into the project directory (`cd minicc`), and then running `make install`.
+Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/Mini-CookieCutter`, going into the project directory (`cd Mini-CookieCutter`), and then running `make install`.
