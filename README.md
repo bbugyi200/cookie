@@ -36,9 +36,12 @@ This project was inspired by [cookiecutter](https://github.com/audreyr/cookiecut
 
     -T ID | --template-id ID
         Specify the desired template's identifier. May be either the template's
-        numerical identifier or its more friendly (and optional) specifier.
+        numerical identifier or its friendly name (which is optional).
+
         e.g. The template 'foo.2.python' can be specified by using either '2'
         or 'foo' as the template id.
+
+        If this option is not provided, the template ID is set to '1' by default.
 
     --use-extension={y|n}
         Append file extension to TARGET. Defaults to 'n'.
@@ -58,13 +61,13 @@ can be used as a custom specifier for the template, `{ID}` is an integer, and `{
 
 It is important to note that `{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
 
-See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/home/.local/share/rookiecc) for examples on how you can use templates.
+See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/.local/share/rookiecc) for examples on how you can use templates.
 
 ##### Why do I need the {ID} part of the template syntax?
 The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
 ```
-nnoremap <Leader>0t :n ~/.local/share/minycc/*1.<C-R>=&filetype<CR><CR>
-nnoremap <Leader>0T :n ~/.local/share/minycc/*2.<C-R>=&filetype<CR><CR>
+nnoremap <Leader>0t :n ~/.local/share/rookiecc/*1.<C-R>=&filetype<CR><CR>
+nnoremap <Leader>0T :n ~/.local/share/rookiecc/*2.<C-R>=&filetype<CR><CR>
 ```
 
 ### Template Declarations and Substitutions
@@ -84,8 +87,7 @@ rookie-cookiecutter also recognizes the following special statement:
 ```
 where `foobar` represents an environment variable. This statement will be replaced
 with the value of the environment variable `foobar`. If `foobar` is not defined,
-the initialization process will hault and `rookiecc` will exit with a non-zero
-status.
+the user will be prompted for a value on the command-line.
 
 ## Configuration File
 
@@ -113,7 +115,7 @@ DEFAULT_BIN_SUBDIR=
 EXEC_HOOK_CMD=
 ```
 
-## Useful Shell Aliases / Functions
+## Using Shell Aliases / Functions
 
 You can of course run the `rookiecc` script directly, but I have not found that to
 be very convenient. Instead, I have created a variety of shell aliases and
@@ -140,13 +142,13 @@ PARENT_BIN_DIR="/home/bryan/Dropbox/bin"
 DEFAULT_BIN_SUBDIR="main"
 EXEC_HOOK_CMD=/usr/local/bin/clinks
 ```
-where `/home/bryan/Dropbox/bin` is a home for [this](https://github.com/bbugyi200/scripts) GitHub repository. (The [clinks](https://github.com/bbugyi200/scripts/blob/master/main/clinks) script wraps a bunch of `stow` commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized and structured.)
+where `/home/bryan/Dropbox/bin` is a home for [this](https://github.com/bbugyi200/scripts) GitHub repository. (The [clinks](https://github.com/bbugyi200/scripts/blob/master/main/clinks) script wraps a bunch of `stow` commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized the way I like in my filesystem.)
 
 To initialize a minimal bash script named `foo` into the `main` directory (where I keep most of my scripts), I could run the following command:
 ```
 binit foo
 ```
-However, suppose instead that I wanted to initialize a new productivity script named `bar` into the `GTD` directory. Furthermore, suppose that I know that `bar` might get complicated (and thus needs to scale well). I could then choose to run
+Suppose instead that I wanted to initialize a new productivity script named `bar` into the `GTD` directory. Furthermore, suppose that I know that `bar` might get complicated (and thus needs to scale well). I could then choose to run
 ```
 Binit -D GTD bar
 ```

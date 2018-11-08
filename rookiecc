@@ -114,9 +114,12 @@ Command-line Options:
 
     -T ID | --template-id ID
         Specify the desired template's identifier. May be either the template's
-        numerical identifier or its more friendly (and optional) specifier.
+        numerical identifier or its friendly name (which is optional).
+
         e.g. The template 'foo.2.python' can be specified by using either '2'
         or 'foo' as the template id.
+
+        If this option is not provided, the template ID is set to '1' by default.
 
     --use-extension={y|n}
         Append file extension to TARGET. Defaults to 'n'.
@@ -146,7 +149,8 @@ while [[ -n "$1" ]]; do
            ;;
        --docs )
            shift
-           doc_varname="$1"
+           eval "printf \"\${$1}\n\""
+           exit 0 
            ;;
        --executable )
            shift
@@ -187,11 +191,6 @@ done
 if [[ "${debug}" = true && "${verbose}" = true ]]; then
     PS4='$LINENO: '
     set -x
-fi
-
-if [[ -n "${doc_varname}" ]]; then
-   eval "printf \"\${${doc_varname}}\n\""
-   exit 0 
 fi
 
 if [[ -z "$1" ]] || [[ -z "$FILETYPE" ]]; then
@@ -268,8 +267,7 @@ imsg "Found matching template: $(basename "${FULL_TEMPLATE_NAME}")"
 # >>> Copy Template Contents to New Script
 if ! [[ -f "$FULL_NEW_SCRIPT_NAME" ]]; then
     imsg "Initializing the '$FULL_NEW_SCRIPT_NAME' script."
-    sudo cp "${FULL_TEMPLATE_NAME}" "${FULL_NEW_SCRIPT_NAME}"
-    sudo chown "$USER":"$USER" "${FULL_NEW_SCRIPT_NAME}"
+    cp "${FULL_TEMPLATE_NAME}" "${FULL_NEW_SCRIPT_NAME}"
 else
     imsg "The '$FULL_NEW_SCRIPT_NAME' script already exists."
     open_editor "${start_line}"
@@ -283,7 +281,7 @@ if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
     fi
 fi
 
-# ===== Custom Template Engine =====
+# ===== Template Statements and Substitutions =====
 # >>> START
 start_mark="{% START HERE %}"
 start_line="$(ag "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
@@ -292,10 +290,12 @@ sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"
 # >>> Environment Variable Replacements
 grep_epttrn="{{ env\.(.*?) }}"
 sed_epttrn="{{ env\.\([^ ]*\) }}"
+
+exec 5>&1  # save STDIN
 while read evar; do
     evalue="$(eval "echo \"\$${evar}\"")"
     if [[ -z "${evalue}" ]]; then
-        die "Environment variable NOT defined: \$${evar}"
+        read -p "${evar}: " evalue <&5
     fi
 
     sed -i "s/${sed_epttrn}/${evalue}/" "${FULL_NEW_SCRIPT_NAME}"

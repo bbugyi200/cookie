@@ -1,10 +1,10 @@
 bindir=$(DESTDIR)/usr/bin
-project=rookiecc
+script=rookiecc
 
-install: install-gutils $(bindir) ${project}
+install: install-gutils $(bindir) ${script}
 	[ -d $(bindir) ] || mkdir -p $(bindir)
-	cp ${project} $(bindir)/${project}
-	chmod +x $(bindir)/${project}
+	cp ${script} $(bindir)/${script}
+	chmod +x $(bindir)/${script}
 
 install-gutils:
 ifeq (,$(wildcard /usr/lib/gutils.sh))
@@ -15,7 +15,7 @@ $(bindir):
 	[ -d $(bindir) ] || mkdir -p $(bindir)
 
 uninstall:
-	rm $(bindir)/$(project)
+	rm $(bindir)/$(script)
 
 uninstall-all: uninstall
 	make -C bashlibs uninstall
