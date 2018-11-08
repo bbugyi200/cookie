@@ -6,7 +6,7 @@ Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
 is opened in vim.
 
-This project was inspired by [cookiecutter](https://github.com/audreyr/cookiecutter).
+This project was inspired by [cookiecutter].
 
 ## Command-line Options
 ```
@@ -61,17 +61,17 @@ can be used as a custom specifier for the template, `{ID}` is an integer, and `{
 
 It is important to note that `{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
 
-See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/.local/share/rookiecc) for examples on how you can use templates.
+See my personal [templates] for examples on how you can use templates.
 
 ##### Why do I need the {ID} part of the template syntax?
 The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
-```
+``` vim
 nnoremap <Leader>0t :n ~/.local/share/rookiecc/*1.<C-R>=&filetype<CR><CR>
 nnoremap <Leader>0T :n ~/.local/share/rookiecc/*2.<C-R>=&filetype<CR><CR>
 ```
 
 ### Template Variables and Statements
-While no where near as full-featured as the [jinja2](https://github.com/pallets/jinja) template engine that [cookiecutter](https://github.com/audreyr/cookiecutter) uses, there are a few special statements avaiable. The syntax will be familiar if you have used [jinja2](https://github.com/pallets/jinja) in the past:
+While no where near as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special statements avaiable. The syntax will be familiar if you have used [jinja] in the past.
 
 ##### Mark Start Point for Editor
 If the following statement is found in the template, vim will start with the cursor
@@ -91,7 +91,7 @@ This string will be replaced by the value of the environment variable `foobar` i
 
 The `rookiecc` script looks for a configuration file at `$XDG_CONFIG_HOME/rookiecc/config`. The following options are available:
 
-``` bash
+``` ini
 # The target file will be initialized in a location relative to this directory
 # unless you specify the `-f` option. In which case the target file will be
 # initialized relative to the current directory.
@@ -140,7 +140,7 @@ PARENT_BIN_DIR="/home/bryan/Dropbox/bin"
 DEFAULT_BIN_SUBDIR="main"
 EXEC_HOOK_CMD=/usr/local/bin/clinks
 ```
-where `/home/bryan/Dropbox/bin` is a home for [this](https://github.com/bbugyi200/scripts) GitHub repository. (The [clinks](https://github.com/bbugyi200/scripts/blob/master/main/clinks) script wraps a bunch of `stow` commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized the way I like in my filesystem.)
+where `/home/bryan/Dropbox/bin` is a home for [this][scripts] GitHub repository. (The [clinks] script wraps a bunch of [stow] commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized the way I like in my filesystem.)
 
 To initialize a minimal bash script named `foo` into the `main` directory (where I keep most of my scripts), I could run the following command:
 ```
@@ -155,3 +155,10 @@ to initialize a full featured bash script (bells and whistles included) into the
 ## Installation
 
 Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/rookie-cookiecutter`, going into the project directory (`cd rookie-cookiecutter`), and then running `make install`.
+
+[jinja]: https://github.com/pallets/jinja
+[cookiecutter]: https://github.com/audreyr/cookiecutter
+[scripts]: https://github.com/bbugyi200/scripts
+[clinks]: https://github.com/bbugyi200/scripts/blob/master/main/clinks
+[templates]: https://github.com/bbugyi200/dotfiles/tree/master/.local/share/rookiecc
+[stow]: https://www.gnu.org/software/stow/manual/stow.html
