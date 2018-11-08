@@ -12,11 +12,10 @@ EOM
 
 # ---------- Source Libraries / Configs ----------
 source /usr/lib/gutils.sh
-my_xdg_config="${my_xdg_config}"
-my_xdg_data="${my_xdg_data}"
+MY_XDG_DATA="${MY_XDG_DATA}"
 
-[ -d "${my_xdg_config}" ] || mkdir -p "${my_xdg_config}"
-[ -d "${my_xdg_data}" ] || mkdir -p "${my_xdg_data}"
+[ -d "${MY_XDG_CONFIG}" ] || mkdir -p "${MY_XDG_CONFIG}"
+[ -d "${MY_XDG_DATA}" ] || mkdir -p "${MY_XDG_DATA}"
 
 read -r -d '' default_config << "EOM"
 # The target file will be initialized in a location relative to this directory
@@ -40,10 +39,10 @@ DEFAULT_BIN_SUBDIR=
 EXEC_HOOK_CMD=
 EOM
 
-if [[ -f "${my_xdg_config}"/config ]]; then
-    source "${my_xdg_config}"/config
+if [[ -f "${MY_XDG_CONFIG}"/config ]]; then
+    source "${MY_XDG_CONFIG}"/config
 else
-    echo "${default_config}" > "${my_xdg_config}"/config
+    echo "${default_config}" > "${MY_XDG_CONFIG}"/config
 fi
 
 # Set default bin directory if not specified in config file.
@@ -62,7 +61,7 @@ function find_templates() {
         name="${id}*.${filetype}"
     fi
 
-    find -L "${my_xdg_data}" -name "${name}"
+    find -L "${MY_XDG_DATA}" -name "${name}"
 }
 
 function open_editor() {
