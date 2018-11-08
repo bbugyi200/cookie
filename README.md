@@ -154,4 +154,4 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/rookie-cookiecutter`, going into the project directory (`cd rookie-cookiecutter`), and then running `make install`.
+Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/rookie-cookiecutter`, going into the project directory (`cd rookie-cookiecutter`), and then running `make install`.
