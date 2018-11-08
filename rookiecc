@@ -3,7 +3,7 @@
 # shellcheck disable=SC1090
 
 read -r -d '' doc << EOM
-Mini-CookieCutter (inspired by cookiecutter)
+rookie-cookiecutter
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it

@@ -1,6 +1,7 @@
 bindir=$(prefix)/usr/bin
+project=rookiecc
 
-install: minicc
+install: ${project}
 	[ -d $(bindir) ] || mkdir -p $(bindir)
-	cp minicc $(bindir)/minicc
-	chmod +x $(bindir)/minicc
+	cp ${project} $(bindir)/${project}
+	chmod +x $(bindir)/${project}

@@ -1,6 +1,6 @@
-# Mini-CookieCutter
+# rookie-cookiecutter
 
-Usage: `minicc [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
+Usage: `rookiecc [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
@@ -52,13 +52,13 @@ This project was inspired by [cookiecutter](https://github.com/audreyr/cookiecut
 
 ## Templates
 
-Templates should be stored in the `$XDG_DATA_HOME/minicc` directory and must have
+Templates should be stored in the `$XDG_DATA_HOME/rookiecc` directory and must have
 the following format: `[{NAME}.]{ID}.{FILETYPE}` where `{NAME}` is optional and
 can be used as a custom specifier for the template, `{ID}` is an integer, and `{FILETYPE}` is the filetype of the template.
 
 It is important to note that `{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
 
-See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/home/.local/share/minicc) for examples on how you can use templates.
+See my personal [templates](https://github.com/bbugyi200/dotfiles/tree/master/home/.local/share/rookiecc) for examples on how you can use templates.
 
 ##### Why do I need the {ID} part of the template syntax?
 The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
@@ -78,18 +78,18 @@ on that line (after removing the statement) and will start in INSERT mode:
 ```
 
 ##### Variable Substitution
-Mini-CookieCutter also recognizes the following special statement:
+rookie-cookiecutter also recognizes the following special statement:
 ```
 {{ env.foobar }}
 ```
 where `foobar` represents an environment variable. This statement will be replaced
 with the value of the environment variable `foobar`. If `foobar` is not defined,
-the initialization process will hault and `minicc` will exit with a non-zero
+the initialization process will hault and `rookiecc` will exit with a non-zero
 status.
 
 ## Configuration File
 
-The `minicc` script looks for a configuration file at `$XDG_CONFIG_HOME/minicc/config`. The following settings are available:
+The `rookiecc` script looks for a configuration file at `$XDG_CONFIG_HOME/rookiecc/config`. The following settings are available:
 
 ``` bash
 # The target file will be initialized in a location relative to this directory
@@ -115,24 +115,24 @@ EXEC_HOOK_CMD=
 
 ## Useful Shell Aliases / Functions
 
-You can of course run the `minicc` script directly, but I have not found that to
+You can of course run the `rookiecc` script directly, but I have not found that to
 be very convenient. Instead, I have created a variety of shell aliases and
 functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
-alias ainit='minicc -F awk -D awk --use-extension=y'
-alias binit='minicc -F sh'
-alias Binit='minicc -F sh -T full'
-hw() { ASSIGNMENT_NUMBER="$1" minicc -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
-alias pyinit='minicc -F python'
-alias Pyinit='minicc -F python -T test -f --executable=n --use-extension=y'
-alias texinit='minicc -F tex -f --executable=n --use-extension=y'
+alias ainit='rookiecc -F awk -D awk --use-extension=y'
+alias binit='rookiecc -F sh'
+alias Binit='rookiecc -F sh -T full'
+hw() { ASSIGNMENT_NUMBER="$1" rookiecc -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
+alias pyinit='rookiecc -F python'
+alias Pyinit='rookiecc -F python -T test -f --executable=n --use-extension=y'
+alias texinit='rookiecc -F tex -f --executable=n --use-extension=y'
 ```
 
 ## Examples
 
-Let us now take a look at a few examples of how Mini-CookieCutter might be useful. 
+Let us now take a look at a few examples of how rookie-cookiecutter might be useful. 
 
 For reference, these are the configuration settings that I use:
 ``` bash
@@ -154,4 +154,4 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/Mini-CookieCutter`, going into the project directory (`cd Mini-CookieCutter`), and then running `make install`.
+Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/rookie-cookiecutter`, going into the project directory (`cd rookie-cookiecutter`), and then running `make install`.
