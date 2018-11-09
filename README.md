@@ -59,8 +59,6 @@ Templates should be stored in the `$XDG_DATA_HOME/rookiecc` directory and must h
 the following format: `[{NAME}.]{ID}.{FILETYPE}` where `{NAME}` is optional and
 can be used as a custom specifier for the template, `{ID}` is an integer, and `{FILETYPE}` is the filetype of the template.
 
-It is important to note that `{FILETYPE}` is decided by vim and will NOT always be (though it usually is) the same as the filetype's traditional extension. For example, python templates must use `python` instead of `py`.
-
 See my personal [templates] for examples on how you can use templates.
 
 ##### Why do I need the {ID} part of the template syntax?
@@ -71,7 +69,7 @@ nnoremap <Leader>0T :n ~/.local/share/rookiecc/*2.<C-R>=&filetype<CR><CR>
 ```
 
 ### Template Variables and Statements
-While no where near as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special statements avaiable. The syntax will be familiar if you have used [jinja] in the past.
+While not as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special variables and statements available. The syntax for these will be familiar if you have used [jinja] in the past.
 
 ##### Mark Start Point for Editor
 If the following statement is found in the template, vim will start with the cursor
