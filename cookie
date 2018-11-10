@@ -283,7 +283,7 @@ fi
 # ===== Template Statements and Substitutions =====
 # >>> START
 start_mark="{% START HERE %}"
-start_line="$(ag "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
+start_line="$(grep -n "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
 sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"
 
 # >>> Environment Variable Replacements
