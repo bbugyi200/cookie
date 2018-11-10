@@ -2,12 +2,12 @@
 
 # shellcheck disable=SC1090
 
-read -r -d '' doc << EOM
+read -r -d '' doc << "EOM"
 rookie-cookiecutter
 
-Initializes TARGET file using a predefined template. TARGET can be a new script,
-configuration file, markup file, etc.... After TARGET has been initialized, it
-is opened for editing.
+Initializes the `TARGET` file using a predefined template. `TARGET` can be a
+new script, configuration file, markup file, etc.... After the `TARGET` file
+has been initialized, it is opened for editing.
 EOM
 
 # ---------- Source Libraries / Configs ----------
@@ -84,7 +84,7 @@ function open_editor() {
 # ---------- Command-line Arguments ----------
 eval set -- "$(getopt -o "d,c,D:,f,F:,h,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
 
-usage="${usage} [-d] [-c] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
+usage="${usage} [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
 scriptname="${scriptname}"
 
 read -r -d '' help << EOM
@@ -97,7 +97,7 @@ Command-line Options:
         Enable debug mode.
 
     -c | --config
-        Edit configuration file.
+        Edit the configuration file.
 
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the

@@ -1,10 +1,10 @@
 # cookie
 
-Usage: `cookie [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
+Usage: `cookie [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
 
-Initializes TARGET file using a predefined template. TARGET can be a new script,
-configuration file, markup file, etc.... After TARGET has been initialized, it
-is opened for editing.
+Initializes the `TARGET` file using a predefined template. `TARGET` can be a
+new script, configuration file, markup file, etc.... After the `TARGET` file
+has been initialized, it is opened for editing.
 
 This project was inspired by [cookiecutter].
 
@@ -14,7 +14,7 @@ This project was inspired by [cookiecutter].
         Enable debug mode.
 
     -c | --config
-        Edit configuration file.
+        Edit the configuration file.
 
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
@@ -96,7 +96,7 @@ To ensure compatibility with files in cookiecutter templates, you may also prefa
 
 ## Configuration File
 
-The `cookie` script looks for a configuration file at `$XDG_CONFIG_HOME/cookie/config`. The following options are available:
+The configuration file can be found at `$XDG_CONFIG_HOME/cookie/config`. The following options are available:
 
 ``` ini
 # The target file will be initialized in a location relative to this directory
@@ -122,18 +122,20 @@ EXEC_HOOK_CMD=
 
 ## Using Shell Aliases / Functions
 
-You can of course run the `cookie` script directly, but I have not found that to
+You can of course run `cookie` directly, but I have not found that to
 be very convenient. Instead, I have created a variety of shell aliases and
 functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
 alias ainit='cookie -F awk -D awk --use-extension=y'
-alias binit='cookie -F sh'
+alias binit='cookie -F sh -T minimal'
 alias Binit='cookie -F sh -T full'
 hw() { ASSIGNMENT_NUMBER="$1" cookie -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
+alias minit='cookie -F make -f --executable=n Makefile'
+alias mtinit='cookie -F make -f -T gtest --executable=n Makefile'
 alias pyinit='cookie -F python'
-alias Pyinit='cookie -F python -T test -f --executable=n --use-extension=y'
+alias pytinit='cookie -F python -T test -f --executable=n --use-extension=y'
 alias texinit='cookie -F tex -f --executable=n --use-extension=y'
 ```
 
@@ -149,19 +151,19 @@ EXEC_HOOK_CMD=/usr/local/bin/clinks
 ```
 where `/home/bryan/Dropbox/bin` is a home for [this][scripts] GitHub repository. (The [clinks] script wraps a bunch of [stow] commands which makes creating symlinks to a system `bin` folder a walk in the park while still keeping my scripts organized the way I like in my filesystem.)
 
-To initialize a minimal bash script named `foo` into the `main` directory (where I keep most of my scripts), I could run the following command:
+To initialize a minimal bash script named `foo` into the `/home/bryan/Dropbox/main` directory (where I keep most of my scripts), I could run the following command:
 ```
 binit foo
 ```
-Suppose instead that I wanted to initialize a new productivity script named `bar` into the `GTD` directory. Furthermore, suppose that I know that `bar` might get complicated (and thus needs to scale well). I could then choose to run
+Suppose instead that I wanted to initialize a new productivity script named `bar` into the `/home/bryan/Dropbox/GTD` directory. Furthermore, suppose that I know that `bar` might get complicated (and thus needs to scale well). I could then choose to run
 ```
 Binit -D GTD bar
 ```
-to initialize a full featured bash script (bells and whistles included) into the `GTD` directory.
+to initialize a full featured bash script (bells and whistles included) into the `/home/bryan/Dropbox/GTD` directory.
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/cookie`, going into the project directory (`cd cookie`), and then running `make install`.
+Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `make install`.
 
 [jinja]: https://github.com/pallets/jinja
 [cookiecutter]: https://github.com/audreyr/cookiecutter
