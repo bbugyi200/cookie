@@ -7,7 +7,7 @@ rookie-cookiecutter
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
-is opened in vim.
+is opened for editing.
 EOM
 
 # ---------- Source Libraries / Configs ----------
@@ -68,12 +68,17 @@ function find_templates() {
 
 function open_editor() {
     start_line="$1"; shift
-    Vim_Opts=()
-    if [[ -n "${start_line}" ]]; then
-        Vim_Opts+=( +"${start_line}" +startinsert )
-    fi
 
-    vim "${Vim_Opts[@]}" "${FULL_NEW_SCRIPT_NAME}"
+    if [[ "${EDITOR}" == "vim"* ]]; then
+        Vim_Opts=()
+        if [[ -n "${start_line}" ]]; then
+            Vim_Opts+=( +"${start_line}" +startinsert )
+        fi
+        
+        ${EDITOR} "${Vim_Opts[@]}" "${FULL_NEW_SCRIPT_NAME}"
+    else
+        ${EDITOR} "${FULL_NEW_SCRIPT_NAME}"
+    fi
 }
 
 # ---------- Command-line Arguments ----------

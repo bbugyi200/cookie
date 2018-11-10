@@ -4,7 +4,7 @@ Usage: `cookie [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
-is opened in vim.
+is opened for editing.
 
 This project was inspired by [cookiecutter].
 
@@ -74,12 +74,12 @@ nnoremap <Leader>0T :n ~/.local/share/cookie/*2.<C-R>=&filetype<CR><CR>
 ### Template Variables and Statements
 While not as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special variables and statements available. The syntax for these will be familiar if you have used [jinja] in the past.
 
-##### Mark Start Point for Editor
-If the following statement is found in the template, vim will start with the cursor
-on that line (after removing the statement) and will start in INSERT mode:
+##### Mark Start Point for Editing
+If the following statement is found in the template, vim will start with the cursor on that line (after removing the statement) and will start in INSERT mode:
 ```
 {% START HERE %}
 ```
+The above statement only works when vim is set as the default system editor. 
 
 ##### Variable Substitution
 cookie also recognizes template variables of the form:
