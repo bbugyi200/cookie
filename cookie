@@ -42,6 +42,7 @@ EOM
 if [[ -f "${MY_XDG_CONFIG}"/config ]]; then
     source "${MY_XDG_CONFIG}"/config
 else
+    imsg "Configruation file has been initialized."
     echo "${default_config}" > "${MY_XDG_CONFIG}"/config
 fi
 
@@ -75,9 +76,9 @@ function open_editor() {
 }
 
 # ---------- Command-line Arguments ----------
-eval set -- "$(getopt -o "d,D:,f,F:,h,N,T:,v,x" -l "debug,docs:,bin-subdir:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
+eval set -- "$(getopt -o "d,c,D:,f,F:,h,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
 
-usage="${usage} [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
+usage="${usage} [-d] [-c] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
 scriptname="${scriptname}"
 
 read -r -d '' help << EOM
@@ -88,6 +89,9 @@ ${doc}
 Command-line Options:
     -d | --debug
         Enable debug mode.
+
+    -c | --config
+        Initialize configuration file with empty template.
 
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
@@ -134,6 +138,9 @@ use_extension="n"
 template_id=1
 while [[ -n "$1" ]]; do
     case $1 in
+       -c|--config )
+           exit 0
+           ;;
        -d|--debug )
            debug=true
            ;;

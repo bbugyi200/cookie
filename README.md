@@ -13,6 +13,9 @@ This project was inspired by [cookiecutter].
     -d | --debug
         Enable debug mode.
 
+    -c | --config
+        Initialize configuration file with empty template.
+
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
         default bin directory (see the configuration file).
