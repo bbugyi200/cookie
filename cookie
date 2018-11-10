@@ -39,11 +39,12 @@ DEFAULT_BIN_SUBDIR=
 EXEC_HOOK_CMD=
 EOM
 
-if [[ -f "${MY_XDG_CONFIG}"/config ]]; then
-    source "${MY_XDG_CONFIG}"/config
+config_file="${MY_XDG_CONFIG}"/config
+if [[ -f "${config_file}" ]]; then
+    source "${config_file}"
 else
     imsg "Configruation file has been initialized."
-    echo "${default_config}" > "${MY_XDG_CONFIG}"/config
+    echo "${default_config}" > "${config_file}"
 fi
 
 # Set default bin directory if not specified in config file.
@@ -91,7 +92,7 @@ Command-line Options:
         Enable debug mode.
 
     -c | --config
-        Initialize configuration file with empty template.
+        Edit configuration file.
 
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
@@ -139,6 +140,7 @@ template_id=1
 while [[ -n "$1" ]]; do
     case $1 in
        -c|--config )
+           ${EDITOR} "${config_file}"
            exit 0
            ;;
        -d|--debug )
@@ -241,7 +243,7 @@ if [[ "${NEW_SCRIPT_PARENT_DIR}" != "." ]]; then
     NEW_SCRIPT_NAME="$(basename "${NEW_SCRIPT_NAME}")"
 fi
 
-if [[ "$(pwd)" != "$FULL_BIN_PATH" ]]; then
+if [[ "$FULL_BIN_PATH" != "./"* ]]; then
     if ! [[ -d "${FULL_BIN_PATH}" ]]; then
         dmsg "Creating directory: ${FULL_BIN_PATH}"
         mkdir -p "${FULL_BIN_PATH}"
@@ -283,6 +285,7 @@ fi
 if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
     sudo chmod +x "$FULL_NEW_SCRIPT_NAME"
     if [[ -n "${EXEC_HOOK_CMD}" ]]; then
+        imsg "Running execute hook: ${EXEC_HOOK_CMD}"
         eval "TARGET=${FULL_NEW_SCRIPT_NAME} ${EXEC_HOOK_CMD}"
     fi
 fi

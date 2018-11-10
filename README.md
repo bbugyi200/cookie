@@ -14,7 +14,7 @@ This project was inspired by [cookiecutter].
         Enable debug mode.
 
     -c | --config
-        Initialize configuration file with empty template.
+        Edit configuration file.
 
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
