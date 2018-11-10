@@ -84,11 +84,11 @@ function open_editor() {
 # ---------- Command-line Arguments ----------
 eval set -- "$(getopt -o "d,c,D:,f,F:,h,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,filetype:,help,executable:,template-id:,verbose,use-extension:" -- "$@")"
 
-usage="${usage} [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
-scriptname="${scriptname}"
+USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET"
+SCRIPTNAME="${SCRIPTNAME}"
 
 read -r -d '' help << EOM
-${usage^}
+${USAGE^}
 
 ${doc}
 
@@ -206,7 +206,7 @@ if [[ "${debug}" = true && "${verbose}" = true ]]; then
 fi
 
 if [[ -z "$1" ]] || [[ -z "$FILETYPE" ]]; then
-    die "${usage}" 2
+    die "${USAGE}" 2
 fi
 
 # ---------- Traps ----------
@@ -296,7 +296,7 @@ if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
 fi
 
 # ===== Template Statements and Substitutions =====
-# >>> START
+# >>> START HERE
 start_mark="{% START HERE %}"
 start_line="$(grep -n "${start_mark}" "${FULL_NEW_SCRIPT_NAME}" | awk -F':' '{print $1}')"
 sed -i "s/${start_mark}//" "${FULL_NEW_SCRIPT_NAME}"

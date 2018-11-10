@@ -16,7 +16,7 @@ $(bin):
 	@mkdir -p $(bin)
 
 uninstall: $(bin)/$(script)
-	rm $(bin)/$(script)
+	@rm $(bin)/$(script)
 
 uninstall-all: uninstall
-	make -C bashlibs uninstall
+	@make -C bashlibs uninstall
