@@ -85,6 +85,12 @@ cookie also recognizes template variables of the form:
 ```
 This string will be replaced by the value of the environment variable `foobar` if it exists. Otherwise, the user will be prompted to provide a value for `foobar` on the command-line.
 
+To ensure compatibility with files in cookiecutter templates, you may also preface the variable with `cookiecutter` followed by a period. Hence, the following statement is equivalent to the one discussed above:
+``` 
+{{ cookiecutter.foobar }}
+```
+
+
 ## Configuration File
 
 The `cookie` script looks for a configuration file at `$XDG_CONFIG_HOME/cookie/config`. The following options are available:

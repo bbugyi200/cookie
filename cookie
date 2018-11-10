@@ -298,7 +298,7 @@ while read evar; do
     fi
 
     sed -i "s/${sed_epttrn}/${evalue}/" "${FULL_NEW_SCRIPT_NAME}"
-done < <(grep -P -o "${grep_epttrn}" "${FULL_NEW_SCRIPT_NAME}" | sed "s/${sed_epttrn}/\1/")
+done < <(grep -P -o "${grep_epttrn}" "${FULL_NEW_SCRIPT_NAME}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
 
 # ===== Open New Script in Editor =====
 open_editor "${start_line}"
