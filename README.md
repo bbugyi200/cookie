@@ -1,6 +1,6 @@
-# rookie-cookiecutter
+# cookie
 
-Usage: `rookiecc [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
+Usage: `cookie [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
 
 Initializes TARGET file using a predefined template. TARGET can be a new script,
 configuration file, markup file, etc.... After TARGET has been initialized, it
@@ -55,7 +55,7 @@ This project was inspired by [cookiecutter].
 
 ## Templates
 
-Templates should be stored in the `$XDG_DATA_HOME/rookiecc` directory and must have
+Templates should be stored in the `$XDG_DATA_HOME/cookie` directory and must have
 the following format: `[{NAME}.]{ID}.{FILETYPE}` where `{NAME}` is optional and
 can be used as a custom specifier for the template, `{ID}` is an integer, and `{FILETYPE}` is the filetype of the template.
 
@@ -64,8 +64,8 @@ See my personal [templates] for examples on how you can use templates.
 ##### Why do I need the {ID} part of the template syntax?
 The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
 ``` vim
-nnoremap <Leader>0t :n ~/.local/share/rookiecc/*1.<C-R>=&filetype<CR><CR>
-nnoremap <Leader>0T :n ~/.local/share/rookiecc/*2.<C-R>=&filetype<CR><CR>
+nnoremap <Leader>0t :n ~/.local/share/cookie/*1.<C-R>=&filetype<CR><CR>
+nnoremap <Leader>0T :n ~/.local/share/cookie/*2.<C-R>=&filetype<CR><CR>
 ```
 
 ### Template Variables and Statements
@@ -79,7 +79,7 @@ on that line (after removing the statement) and will start in INSERT mode:
 ```
 
 ##### Variable Substitution
-rookie-cookiecutter also recognizes template variables of the form:
+cookie also recognizes template variables of the form:
 ```
 {{ foobar }}
 ```
@@ -87,7 +87,7 @@ This string will be replaced by the value of the environment variable `foobar` i
 
 ## Configuration File
 
-The `rookiecc` script looks for a configuration file at `$XDG_CONFIG_HOME/rookiecc/config`. The following options are available:
+The `cookie` script looks for a configuration file at `$XDG_CONFIG_HOME/cookie/config`. The following options are available:
 
 ``` ini
 # The target file will be initialized in a location relative to this directory
@@ -113,24 +113,24 @@ EXEC_HOOK_CMD=
 
 ## Using Shell Aliases / Functions
 
-You can of course run the `rookiecc` script directly, but I have not found that to
+You can of course run the `cookie` script directly, but I have not found that to
 be very convenient. Instead, I have created a variety of shell aliases and
 functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
-alias ainit='rookiecc -F awk -D awk --use-extension=y'
-alias binit='rookiecc -F sh'
-alias Binit='rookiecc -F sh -T full'
-hw() { ASSIGNMENT_NUMBER="$1" rookiecc -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
-alias pyinit='rookiecc -F python'
-alias Pyinit='rookiecc -F python -T test -f --executable=n --use-extension=y'
-alias texinit='rookiecc -F tex -f --executable=n --use-extension=y'
+alias ainit='cookie -F awk -D awk --use-extension=y'
+alias binit='cookie -F sh'
+alias Binit='cookie -F sh -T full'
+hw() { ASSIGNMENT_NUMBER="$1" cookie -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
+alias pyinit='cookie -F python'
+alias Pyinit='cookie -F python -T test -f --executable=n --use-extension=y'
+alias texinit='cookie -F tex -f --executable=n --use-extension=y'
 ```
 
 ## Examples
 
-Let us now take a look at a few examples of how rookie-cookiecutter might be useful. 
+Let us now take a look at a few examples of how cookie might be useful. 
 
 For reference, these are the configuration settings that I use:
 ``` bash
@@ -152,11 +152,11 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/rookie-cookiecutter`, going into the project directory (`cd rookie-cookiecutter`), and then running `make install`.
+Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/cookie`, going into the project directory (`cd cookie`), and then running `make install`.
 
 [jinja]: https://github.com/pallets/jinja
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [scripts]: https://github.com/bbugyi200/scripts
 [clinks]: https://github.com/bbugyi200/scripts/blob/master/main/clinks
-[templates]: https://github.com/bbugyi200/dotfiles/tree/master/.local/share/rookiecc
+[templates]: https://github.com/bbugyi200/dotfiles/tree/master/.local/share/cookie
 [stow]: https://www.gnu.org/software/stow/manual/stow.html

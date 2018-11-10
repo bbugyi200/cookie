@@ -1,5 +1,5 @@
 bin=$(DESTDIR)/usr/bin
-script=rookiecc
+script=cookie
 
 .PHONY: install uninstall uninstall-all
 
