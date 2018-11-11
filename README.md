@@ -1,75 +1,54 @@
 # cookie
 
-Usage: `cookie [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-T TEMPLATE_ID] [-v] -F FILETYPE TARGET`
+Usage: `cookie [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET`
 
 Initializes the `TARGET` file using a predefined template. `TARGET` can be a
 new script, configuration file, markup file, etc.... After the `TARGET` file
 has been initialized, it is opened for editing.
 
-This project was inspired by [cookiecutter].
-
 ## Command-line Options
 ```
-    -d | --debug
-        Enable debug mode.
+-d | --debug
+Enable debug mode.
 
-    -c | --config
-        Edit the configuration file.
+-c | --config
+Edit the configuration file.
 
-    -D DIR | --bin-subdir DIR
-        Initialize TARGET into DIR, which should be a subdirectory of the
-        default bin directory (see the configuration file).
+-D DIR | --bin-subdir DIR
+Initialize TARGET into DIR, which should be a subdirectory of the
+default bin directory (see the configuration file).
 
-    --executable={y|n}
-        Make TARGET executable. Defaults to 'y'.
+--executable={y|n}
+Make TARGET executable. Defaults to 'y'.
 
-    -f | --force
-        Force TARGET initialization to be relative to the current
-        directory.
+-f | --force
+Force TARGET initialization to be relative to the current
+directory.
 
-    -F FILETYPE | --filetype FILETYPE
-        The filetype of the template. The TARGET (once initialized) will
-        share this filetype.
+-h | --help
+View this help message.
 
-    -h | --help
-        View this help message.
+-N
+Equivalent to --executable=n.
 
-    -N
-        Equivalent to --executable=n.
+-T TEMPLATE | --template TEMPLATE
+The name of the template (e.g. mytemplate.sh).
 
-    -T ID | --template-id ID
-        Specify the desired template's identifier. May be either the template's
-        numerical identifier or its friendly name (which is optional).
+--use-extension={y|n}
+Append file extension to TARGET. Defaults to 'n'.
 
-        e.g. The template 'foo.2.python' can be specified by using either '2'
-        or 'foo' as the template id.
+-x
+Equivalent to --use-extension=y
 
-        If this option is not provided, the template ID is set to '1' by default.
-
-    --use-extension={y|n}
-        Append file extension to TARGET. Defaults to 'n'.
-
-    -x
-        Equivalent to --use-extension=y
-
-    -v | --verbose
-        Enable verbose output.
+-v | --verbose
+Enable verbose output.
 ```
 
 ## Templates
 
-Templates should be stored in the `$XDG_DATA_HOME/cookie` directory and must have
-the following format: `[{NAME}.]{ID}.{FILETYPE}` where `{NAME}` is optional and
-can be used as a custom specifier for the template, `{ID}` is an integer, and `{FILETYPE}` is the filetype of the template.
+Templates should be stored in the `$XDG_DATA_HOME/cookie` directory.
 
 See my personal [templates] for examples on how you can use templates.
-
-##### Why do I need the {ID} part of the template syntax?
-The short answer is that you shouldn't. A longer answer might explain why the following types of vim mappings are awesome and only possible when we tag each template with a numerical id:
-``` vim
-nnoremap <Leader>0t :n ~/.local/share/cookie/*1.<C-R>=&filetype<CR><CR>
-nnoremap <Leader>0T :n ~/.local/share/cookie/*2.<C-R>=&filetype<CR><CR>
-```
 
 ### Template Variables and Statements
 While not as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special variables and statements available. The syntax for these will be familiar if you have used [jinja] in the past.
@@ -128,15 +107,15 @@ functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
-alias ainit='cookie -F awk -D awk --use-extension=y'
-alias binit='cookie -F sh -T minimal'
-alias Binit='cookie -F sh -T full'
-hw() { ASSIGNMENT_NUMBER="$1" cookie -F tex -T hw -f -x -N "${@:2}" HW"$1"/hw"$1"; }
-alias minit='cookie -F make -f --executable=n Makefile'
-alias mtinit='cookie -F make -f -T gtest --executable=n Makefile'
-alias pyinit='cookie -F python'
-alias pytinit='cookie -F python -T test -f --executable=n --use-extension=y'
-alias texinit='cookie -F tex -f --executable=n --use-extension=y'
+alias ainit='cookie -T template.awk -D awk --use-extension=y'
+alias binit='cookie -T minimal.sh'
+alias Binit='cookie -T full.sh'
+hw() { ASSIGNMENT_NUMBER="$1" cookie -T hw.tex -f -x -N "${@:2}" HW"$1"/hw"$1"; }
+alias minit='cookie -T c.make -f --executable=n Makefile'
+alias mtinit='cookie -T gtest.make -f --executable=n Makefile'
+alias pyinit='cookie -T template.py'
+alias pytinit='cookie -T pytest.py -f --executable=n --use-extension=y'
+alias texinit='cookie -T template.tex -f --executable=n --use-extension=y'
 ```
 
 ## Examples
