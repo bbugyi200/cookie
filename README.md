@@ -6,6 +6,8 @@ Initializes the `TARGET` file using a predefined template. `TARGET` can be a
 new script, configuration file, markup file, etc.... After the `TARGET` file
 has been initialized, it is opened for editing.
 
+This project was inspired by [cookiecutter].
+
 ## Command-line Options
 ```
 -d | --debug
