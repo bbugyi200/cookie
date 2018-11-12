@@ -1,56 +1,57 @@
 # cookie
 
-Usage: `cookie [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET`
+**Don't repeat yourself! Cookie templates make writing scripts easier than ever!**
+
+## Usage
+```
+Usage: cookie [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET
 
 Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
 The target file can be a new script, configuration file, markup file, etc....
-After the target file has been initialized, it is opened for editing using
-the system's default editor.
+After the target file has been initialized, it is opened for editing using the
+system's default editor.
 
-This project was inspired by [cookiecutter].
+Command-line Options:
+    -d | --debug
+        Enable debug mode.
 
-## Command-line Options
-```
--d | --debug
-    Enable debug mode.
+    -c | --config
+        Edit the configuration file.
 
--c | --config
-    Edit the configuration file.
+    -D DIR | --bin-subdir DIR
+        Initialize TARGET into DIR, which should be a subdirectory of the
+        default bin directory (see the configuration file).
 
--D DIR | --bin-subdir DIR
-    Initialize TARGET into DIR, which should be a subdirectory of the
-    default bin directory (see the configuration file).
+    -e TEMPLATE | --edit TEMPLATE
+        Edit cookie template.
 
--e TEMPLATE | --edit TEMPLATE
-    Edit cookie template.
+    --executable={y|n}
+        Make TARGET executable. Defaults to 'y'.
 
---executable={y|n}
-    Make TARGET executable. Defaults to 'y'.
+    -f | --force
+        Force TARGET initialization to be relative to the current
+        directory.
 
--f | --force
-    Force TARGET initialization to be relative to the current
-    directory.
+    -h | --help
+        View this help message.
 
--h | --help
-    View this help message.
+    -l | --list
+        List available templates.
 
--l | --list
-    List available templates.
+    -N
+        Equivalent to --executable=n.
 
--N
-    Equivalent to --executable=n.
+    -T TEMPLATE | --template TEMPLATE
+        The name of the template (e.g. mytemplate.sh).
 
--T TEMPLATE | --template TEMPLATE
-    The name of the template (e.g. mytemplate.sh).
+    --use-extension={y|n}
+        Append file extension to TARGET. Defaults to 'n'.
 
---use-extension={y|n}
-    Append file extension to TARGET. Defaults to 'n'.
+    -x
+        Equivalent to --use-extension=y
 
--x
-    Equivalent to --use-extension=y
-
--v | --verbose
-    Enable verbose output.
+    -v | --verbose
+        Enable verbose output.
 ```
 
 ## Templates

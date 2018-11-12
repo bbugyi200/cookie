@@ -91,7 +91,12 @@ else
     editor="vim"
 fi
 
-read -r -d '' cli_options << EOM
+read -r -d '' help << EOM
+${USAGE^}
+
+${doc}
+
+Command-line Options:
     -d | --debug
         Enable debug mode.
 
@@ -132,15 +137,6 @@ read -r -d '' cli_options << EOM
 
     -v | --verbose
         Enable verbose output.
-EOM
-
-read -r -d '' help << EOM
-${USAGE^}
-
-${doc}
-
-Command-line Options:
-${cli_options}
 EOM
 
 executable="y"
