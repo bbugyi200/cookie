@@ -62,13 +62,6 @@ function open_editor() {
     start_line="$1"; shift
     mode="$1"; shift
 
-    # shellcheck disable=SC2153
-    if [[ -n "${EDITOR}" ]]; then
-        editor="${EDITOR}"
-    else
-        editor="vim"
-    fi
-
     if [[ "${editor}" == *"vim"* ]]; then
         Vim_Opts=()
         if [[ -n "${start_line}" ]]; then
@@ -86,10 +79,17 @@ function open_editor() {
 }
 
 # ---------- Command-line Arguments ----------
-eval set -- "$(getopt -o "d,c,D:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
+eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
 
-USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET"
+USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET"
 SCRIPTNAME="${SCRIPTNAME}"
+
+# shellcheck disable=SC2153
+if [[ -n "${EDITOR}" ]]; then
+    editor="${EDITOR}"
+else
+    editor="vim"
+fi
 
 read -r -d '' cli_options << EOM
     -d | --debug
@@ -101,6 +101,9 @@ read -r -d '' cli_options << EOM
     -D DIR | --bin-subdir DIR
         Initialize TARGET into DIR, which should be a subdirectory of the
         default bin directory (see the configuration file).
+
+    -e TEMPLATE | --edit TEMPLATE
+        Edit cookie template.
 
     --executable={y|n}
         Make TARGET executable. Defaults to 'y'.
@@ -145,11 +148,20 @@ use_extension="n"
 while [[ -n "$1" ]]; do
     case $1 in
        -c|--config )
-           ${EDITOR} "${config_file}"
+           "${editor}" "${config_file}"
            exit 0
            ;;
        -d|--debug )
            debug=true
+           ;;
+       -e|--edit )
+           shift
+           full_template_name="${MY_XDG_DATA}"/"$1"
+           if ! [[ -f "${full_template_name}" ]]; then
+               die "The template does not exist: ${full_template_name}"
+           fi
+           "${editor}" "${full_template_name}"
+           exit 0
            ;;
        -h|--help )
            echo "$help"

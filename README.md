@@ -21,6 +21,9 @@ This project was inspired by [cookiecutter].
     Initialize TARGET into DIR, which should be a subdirectory of the
     default bin directory (see the configuration file).
 
+-e TEMPLATE | --edit TEMPLATE
+    Edit cookie template.
+
 --executable={y|n}
     Make TARGET executable. Defaults to 'y'.
 
