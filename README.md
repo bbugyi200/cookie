@@ -12,39 +12,39 @@ This project was inspired by [cookiecutter].
 ## Command-line Options
 ```
 -d | --debug
-Enable debug mode.
+    Enable debug mode.
 
 -c | --config
-Edit the configuration file.
+    Edit the configuration file.
 
 -D DIR | --bin-subdir DIR
-Initialize TARGET into DIR, which should be a subdirectory of the
-default bin directory (see the configuration file).
+    Initialize TARGET into DIR, which should be a subdirectory of the
+    default bin directory (see the configuration file).
 
 --executable={y|n}
-Make TARGET executable. Defaults to 'y'.
+    Make TARGET executable. Defaults to 'y'.
 
 -f | --force
-Force TARGET initialization to be relative to the current
-directory.
+    Force TARGET initialization to be relative to the current
+    directory.
 
 -h | --help
-View this help message.
+    View this help message.
 
 -N
-Equivalent to --executable=n.
+    Equivalent to --executable=n.
 
 -T TEMPLATE | --template TEMPLATE
-The name of the template (e.g. mytemplate.sh).
+    The name of the template (e.g. mytemplate.sh).
 
 --use-extension={y|n}
-Append file extension to TARGET. Defaults to 'n'.
+    Append file extension to TARGET. Defaults to 'n'.
 
 -x
-Equivalent to --use-extension=y
+    Equivalent to --use-extension=y
 
 -v | --verbose
-Enable verbose output.
+    Enable verbose output.
 ```
 
 ## Templates
@@ -56,20 +56,7 @@ See my personal [templates] for examples on how you can use templates.
 ### Template Variables and Statements
 While not as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special variables and statements available. The syntax for these will be familiar if you have used [jinja] in the past.
 
-##### Mark Start Point for Editing
-**NOTE:** The following statements only works when vim is set as the default system editor. 
-
-If the following statement is found in the template, vim will start with the cursor on that line (after removing the statement) and will start in INSERT mode:
-```
-{% START INSERT HERE %}
-```
-
-The following statement does the same thing but will start vim in NORMAL mode (vim's default behavior):
-```
-{% START NORMAL HERE %}
-```
-
-##### Variable Substitution
+#### Variable Substitution
 cookie also recognizes template variables of the form:
 ```
 {{ foobar }}
@@ -81,6 +68,16 @@ To ensure compatibility with files in cookiecutter templates, you may also prefa
 {{ cookiecutter.foobar }}
 ```
 
+#### Mark Start Point for Editing (only works when vim is set as the default system editor)
+If the following statement is found in the template, vim will start with the cursor on that line (after removing the statement) and will start in INSERT mode:
+```
+{% START INSERT HERE %}
+```
+
+The following statement does the same thing but will start vim in NORMAL mode (vim's default behavior):
+```
+{% START NORMAL HERE %}
+```
 
 ## Configuration File
 
