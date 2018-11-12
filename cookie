@@ -108,7 +108,7 @@ Command-line Options:
         default bin directory (see the configuration file).
 
     -e TEMPLATE | --edit TEMPLATE
-        Edit cookie template.
+        Add / edit cookie template.
 
     --executable={y|n}
         Make TARGET executable. Defaults to 'y'.
@@ -153,9 +153,6 @@ while [[ -n "$1" ]]; do
        -e|--edit )
            shift
            full_template_name="${MY_XDG_DATA}"/"$1"
-           if ! [[ -f "${full_template_name}" ]]; then
-               die "The template does not exist: ${full_template_name}"
-           fi
            "${editor}" "${full_template_name}"
            exit 0
            ;;
