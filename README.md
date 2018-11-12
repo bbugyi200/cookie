@@ -2,9 +2,10 @@
 
 Usage: `cookie [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET`
 
-Initializes the `TARGET` file using a predefined template. `TARGET` can be a
-new script, configuration file, markup file, etc.... After the `TARGET` file
-has been initialized, it is opened for editing.
+Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
+The target file can be a new script, configuration file, markup file, etc....
+After the target file has been initialized, it is opened for editing using
+the system's default editor.
 
 This project was inspired by [cookiecutter].
 
