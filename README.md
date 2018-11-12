@@ -57,11 +57,17 @@ See my personal [templates] for examples on how you can use templates.
 While not as full-featured as the [jinja] template engine that [cookiecutter] uses, there are a few special variables and statements available. The syntax for these will be familiar if you have used [jinja] in the past.
 
 ##### Mark Start Point for Editing
+**NOTE:** The following statements only works when vim is set as the default system editor. 
+
 If the following statement is found in the template, vim will start with the cursor on that line (after removing the statement) and will start in INSERT mode:
 ```
-{% START HERE %}
+{% START INSERT HERE %}
 ```
-The above statement only works when vim is set as the default system editor. 
+
+The following statement does the same thing but will start vim in NORMAL mode (vim's default behavior):
+```
+{% START NORMAL HERE %}
+```
 
 ##### Variable Substitution
 cookie also recognizes template variables of the form:

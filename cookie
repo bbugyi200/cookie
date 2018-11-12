@@ -54,8 +54,15 @@ if [[ -z "${PARENT_BIN_DIR}" ]]; then
 fi
 
 # ---------- Function Definitions ----------
+function get_start_line() {
+    mark="$1"; shift
+    grep -n "${mark}" "${full_new_script_name}" | awk -F':' '{print $1}'
+    sed -i "s/${mark}//" "${full_new_script_name}"
+}
+
 function open_editor() {
     start_line="$1"; shift
+    mode="$1"; shift
 
     # shellcheck disable=SC2153
     if [[ -n "${EDITOR}" ]]; then
@@ -67,7 +74,11 @@ function open_editor() {
     if [[ "${editor}" == *"vim"* ]]; then
         Vim_Opts=()
         if [[ -n "${start_line}" ]]; then
-            Vim_Opts+=( +"${start_line}" +startinsert )
+            Vim_Opts+=( +"${start_line}" )
+        fi
+
+        if [[ "${mode}" == "INSERT" ]]; then
+            Vim_Opts+=( +startinsert )
         fi
         
         ${editor} "${Vim_Opts[@]}" "${full_new_script_name}"
@@ -269,9 +280,19 @@ fi
 
 # ===== Template Statements and Substitutions =====
 # >>> START HERE
-start_mark="{% START HERE %}"
-start_line="$(grep -n "${start_mark}" "${full_new_script_name}" | awk -F':' '{print $1}')"
-sed -i "s/${start_mark}//" "${full_new_script_name}"
+istart_mark="{% START INSERT MODE %}"
+istart_line="$(get_start_line "${istart_mark}")"
+
+nstart_mark="{% START NORMAL MODE %}"
+nstart_line="$(get_start_line "${nstart_mark}")"
+
+if [[ -n "${istart_line}" ]]; then
+    mode="INSERT"
+    start_line="${istart_line}"
+elif [[ -n "${nstart_line}" ]]; then
+    mode="NORMAL"
+    start_line="${nstart_line}"
+fi
 
 # >>> Environment Variable Replacements
 grep_epttrn="{{ (.*?) }}"
@@ -288,4 +309,4 @@ while read evar; do
 done < <(grep -P -o "${grep_epttrn}" "${full_new_script_name}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
 
 # ===== Open New Script in Editor =====
-open_editor "${start_line}"
+open_editor "${start_line}" "${mode}"
