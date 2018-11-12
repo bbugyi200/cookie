@@ -31,6 +31,9 @@ This project was inspired by [cookiecutter].
 -h | --help
     View this help message.
 
+-l | --list
+    List available templates.
+
 -N
     Equivalent to --executable=n.
 

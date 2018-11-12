@@ -3,8 +3,6 @@
 # shellcheck disable=SC1090
 
 read -r -d '' doc << "EOM"
-cookie
-
 Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
 The target file can be a new script, configuration file, markup file, etc....
 After the target file has been initialized, it is opened for editing using the
@@ -88,17 +86,12 @@ function open_editor() {
 }
 
 # ---------- Command-line Arguments ----------
-eval set -- "$(getopt -o "d,c,D:,f,F:,h,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,help,executable:,template:,verbose,use-extension:" -- "$@")"
+eval set -- "$(getopt -o "d,c,D:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
 
 USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET"
 SCRIPTNAME="${SCRIPTNAME}"
 
-read -r -d '' help << EOM
-${USAGE^}
-
-${doc}
-
-Command-line Options:
+read -r -d '' cli_options << EOM
     -d | --debug
         Enable debug mode.
 
@@ -119,6 +112,9 @@ Command-line Options:
     -h | --help
         View this help message.
 
+    -l | --list
+        List available templates.
+
     -N
         Equivalent to --executable=n.
 
@@ -133,6 +129,15 @@ Command-line Options:
 
     -v | --verbose
         Enable verbose output.
+EOM
+
+read -r -d '' help << EOM
+${USAGE^}
+
+${doc}
+
+Command-line Options:
+${cli_options}
 EOM
 
 executable="y"
@@ -150,13 +155,19 @@ while [[ -n "$1" ]]; do
            echo "$help"
            exit 0
            ;;
+       -l|--list )
+           for T in "${MY_XDG_DATA}"/*; do
+               basename "${T}"
+           done
+           exit 0
+           ;;
        -D|--bin-subdir )
            shift
            BIN_SUBDIR="$1"
            ;;
        --docs )
            shift
-           eval "printf \"\${$1}\n\""
+           eval "printf -- \"\${$1}\n\""
            exit 0 
            ;;
        --executable )
