@@ -1,6 +1,7 @@
 language: bash
 install:
-    - make install-gutils
+    - sudo make install-gutils
+    - sudo make install-shunit2
     - gem install bashcov
 script: ./test_cookie.sh
 after_success: bashcov ./test_cookie.sh

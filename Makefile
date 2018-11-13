@@ -13,6 +13,10 @@ ifeq (,$(wildcard /usr/bin/gutils.sh))
 	make -C bashlibs DESTDIR=$(DESTDIR) install
 endif
 
+install-shunit2:
+	git clone https://github.com/kward/shunit2
+	cp shunit2/shunit2 $(bin)/shunit2
+
 $(bin):
 	@mkdir -p $(bin)
 
