@@ -119,4 +119,22 @@ EOM
     assertEquals "${expected}" "${new_contents}"
 }
 
+test_main() {
+    export EDITOR=":"
+    export PARENT_DIR=/tmp
+    export TARGET_DIR=
+    export COOKIE_DIR=/tmp/cookie
+    mkdir -p "${COOKIE_DIR}"
+
+    template="${COOKIE_DIR}"/template
+    touch "${template}"
+
+    main "-T" "template" "foobar" &> /dev/null
+    assertTrue '/tmp/foobar is not a file.' "[ -f /tmp/foobar ]"
+}
+
+tearDown() {
+    rm -rf /tmp/foobar
+}
+
 source shunit2

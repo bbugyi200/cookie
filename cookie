@@ -73,6 +73,50 @@ function exit_handler() {
 trap 'exit_handler $?' EXIT
 
 # ---------- Function Definitions ----------
+function main() {
+    read template target executable force < <(parse_args "$@")
+    EC=$?
+
+    if [[ "${EC}" -eq 2 ]]; then
+        die "${USAGE}" "${EC}"
+    fi
+
+    read dest_dir < <(get_dest_dir "${target}" "${force}")
+
+    full_target="${dest_dir}"/"${target}"
+    full_template="${COOKIE_DIR}"/"${template}"
+    if ! [[ -f "${full_template}" ]]; then
+        die "Template does not exist: ${full_template}"
+    fi
+
+    imsg "Found matching template: $(basename "${full_template}")"
+
+    # ===== Initialize New Script =====
+    # >>> Copy Template Contents to New Script
+    if ! [[ -f "${full_target}" ]]; then
+        imsg "Initializing the '${full_target}' script."
+        cp "${full_template}" "${full_target}"
+    else
+        imsg "The '${full_target}' script already exists."
+        eval "$(open_editor "" "NORMAL" "${full_target}")"
+        exit 0
+    fi
+    
+    # >>> Make New Script Executable
+    if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
+        sudo chmod +x "${full_target}"
+        if [[ -n "${EXEC_HOOK_CMD}" ]]; then
+            imsg "Running execute hook: ${EXEC_HOOK_CMD}"
+            eval "TARGET=${full_target} ${EXEC_HOOK_CMD}"
+        fi
+    fi
+
+    contents="$(cat "${full_target}")"
+    template_engine "${contents}" > "${full_target}"
+
+    eval "$(open_editor "${start_line}" "${mode}" "${full_target}")"
+}
+
 function parse_args() {
     eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
     
@@ -309,47 +353,5 @@ function open_editor() {
 }
 
 if [[ "${SCRIPTNAME}" == "cookie" ]]; then
-    read template target executable force < <(parse_args "$@")
-    EC=$?
-
-    if [[ "${EC}" -eq 2 ]]; then
-        die "${USAGE}" "${EC}"
-    elif [[ "${EC}" -ne 0 ]]; then
-        die "Unknown error while parsing command-line arguments."
-    fi
-
-    read dest_dir < <(get_dest_dir "${target}" "${force}")
-
-    full_target="${dest_dir}"/"${target}"
-    full_template="${COOKIE_DIR}"/"${template}"
-    if ! [[ -f "${full_template}" ]]; then
-        die "Template does not exist: ${full_template}"
-    fi
-
-    imsg "Found matching template: $(basename "${full_template}")"
-
-    # ===== Initialize New Script =====
-    # >>> Copy Template Contents to New Script
-    if ! [[ -f "${full_target}" ]]; then
-        imsg "Initializing the '${full_target}' script."
-        cp "${full_template}" "${full_target}"
-    else
-        imsg "The '${full_target}' script already exists."
-        eval "$(open_editor "" "NORMAL" "${full_target}")"
-        exit 0
-    fi
-    
-    # >>> Make New Script Executable
-    if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
-        sudo chmod +x "${full_target}"
-        if [[ -n "${EXEC_HOOK_CMD}" ]]; then
-            imsg "Running execute hook: ${EXEC_HOOK_CMD}"
-            eval "TARGET=${full_target} ${EXEC_HOOK_CMD}"
-        fi
-    fi
-
-    contents="$(cat "${full_target}")"
-    template_engine "${contents}" > "${full_target}"
-
-    eval "$(open_editor "${start_line}" "${mode}" "${full_target}")"
+    main "$@"
 fi
