@@ -1,5 +1,32 @@
 language: bash
+
+sudo: required
+
 install: ./scripts/install-deps
+
 script: ./test_cookie.sh
-after_success: bashcov ./test_cookie.sh
+
 os: linux
+
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+
+after_success: |
+  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+  tar xzf master.tar.gz &&
+  cd kcov-master &&
+  mkdir build &&
+  cd build &&
+  cmake .. &&
+  make &&
+  sudo make install &&
+  cd ../.. &&
+  rm -rf kcov-master &&
+  mkdir -p coverage &&
+  kcov coverage test_cookie.sh &&
+  bash <(curl -s https://codecov.io/bash)
