@@ -1,11 +1,11 @@
-bin=$(DESTDIR)/usr/bin
+bindir=$(DESTDIR)/usr/bin
 script=cookie
 
 .PHONY: install uninstall uninstall-all
 
-install: install-gutils $(bin) $(script)
-	cp $(script) $(bin)/$(script)
-	chmod +x $(bin)/$(script)
+install: install-gutils $(bindir) $(script)
+	cp $(script) $(bindir)/$(script)
+	chmod +x $(bindir)/$(script)
 
 install-gutils:
 ifeq (,$(wildcard /usr/bin/gutils.sh))
@@ -13,11 +13,11 @@ ifeq (,$(wildcard /usr/bin/gutils.sh))
 	make -C bashlibs DESTDIR=$(DESTDIR) install
 endif
 
-$(bin):
-	@mkdir -p $(bin)
+$(bindir):
+	@mkdir -p $(bindir)
 
-uninstall: $(bin)/$(script)
-	@rm $(bin)/$(script)
+uninstall: $(bindir)/$(script)
+	@rm $(bindir)/$(script)
 
 uninstall-all: uninstall
 	@make -C bashlibs uninstall

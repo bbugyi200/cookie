@@ -81,7 +81,7 @@ function main() {
         die "${USAGE}" "${EC}"
     fi
 
-    read dest_dir < <(get_dest_dir "${target}" "${force}")
+    get_dest_dir "${target}" "${force}"
 
     full_target="${dest_dir}"/"${target}"
     full_template="${COOKIE_DIR}"/"${template}"
@@ -112,7 +112,8 @@ function main() {
     fi
 
     contents="$(cat "${full_target}")"
-    template_engine "${contents}" > "${full_target}"
+    template_engine "${contents}"
+    echo "${new_contents}" > "${full_target}"
 
     eval "$(open_editor "${start_line}" "${mode}" "${full_target}")"
 }
@@ -130,46 +131,46 @@ function parse_args() {
     fi
     
     read -r -d '' help <<-EOM
-${USAGE^}
-
-${doc}
-
-Command-line Options:
-    -d | --debug
-        Enable debug mode.
-
-    -c | --config
-        Edit the configuration file.
-
-    -D DIR | --bin-subdir DIR
-        Initialize TARGET into DIR, which should be a subdirectory of the
-        default bin directory (see the configuration file).
-
-    -e TEMPLATE | --edit TEMPLATE
-        Add / edit cookie template.
-
-    --executable={y|n}
-        Make TARGET executable. Defaults to 'n'.
-
-    -f | --force
-        Force TARGET initialization to be relative to the current
-        directory.
-
-    -h | --help
-        View this help message.
-
-    -l | --list
-        List available templates.
-
-    -T TEMPLATE | --template TEMPLATE
-        The name of the template (e.g. mytemplate.sh).
-
-    -x
-        Equivalent to --executable=y
-
-    -v | --verbose
-        Enable verbose output.
-EOM
+	${USAGE^}
+		
+	${doc}
+	
+	Command-line Options:
+	    -d | --debug
+	        Enable debug mode.
+	
+	    -c | --config
+	        Edit the configuration file.
+	
+	    -D DIR | --bin-subdir DIR
+	        Initialize TARGET into DIR, which should be a subdirectory of the
+	        default bin directory (see the configuration file).
+	
+	    -e TEMPLATE | --edit TEMPLATE
+	        Add / edit cookie template.
+	
+	    --executable={y|n}
+	        Make TARGET executable. Defaults to 'n'.
+	
+	    -f | --force
+	        Force TARGET initialization to be relative to the current
+	        directory.
+	
+	    -h | --help
+	        View this help message.
+	
+	    -l | --list
+	        List available templates.
+	
+	    -T TEMPLATE | --template TEMPLATE
+	        The name of the template (e.g. mytemplate.sh).
+	
+	    -x
+	        Equivalent to --executable=y
+	
+	    -v | --verbose
+	        Enable verbose output.
+	EOM
     
     executable="n"
     force=false
@@ -242,12 +243,10 @@ EOM
     fi
 
     if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
-        return 2
+        die "${USAGE}" 2
     fi
     
     target="$1"; shift
-
-    echo "${template}" "${target}" "${executable}" "${force}"
 }
 
 function get_dest_dir() {
@@ -278,24 +277,22 @@ function get_dest_dir() {
             parent_dir_created=true
         fi
     fi
-
-    echo "${dest_dir}"
 }
 
 function template_engine() {
-    old_content="$1"; shift
-    new_content="${old_content}"
+    old_contents="$1"; shift
+    new_contents="${old_contents}"
 
     # ===== Template Statements and Substitutions =====
     # >>> START HERE
     istart_mark="{% START INSERT MODE %}"
-    istart_line="$(get_start_line "${istart_mark}" "${old_content}")"
+    istart_line="$(get_start_line "${istart_mark}" "${old_contents}")"
     
     nstart_mark="{% START NORMAL MODE %}"
-    nstart_line="$(get_start_line "${nstart_mark}" "${old_content}")"
+    nstart_line="$(get_start_line "${nstart_mark}" "${old_contents}")"
 
-    contents="${new_content}"
-    new_content="${contents//\{% START [A-z]* MODE %\}}"
+    contents="${new_contents}"
+    new_contents="${contents//\{% START [A-z]* MODE %\}}"
     
     if [[ -n "${istart_line}" ]]; then
         mode="INSERT"
@@ -309,19 +306,17 @@ function template_engine() {
     grep_epttrn="{{ (.*?) }}"
     sed_epttrn="{{ \([^ ]*\) }}"
     
-    exec 5>&1  # save STDIN
+    exec 5>&0  # save STDIN
     while read evar; do
         evalue="$(eval "echo \"\$${evar}\"")"
         if [[ -z "${evalue}" ]]; then
             read -p "${evar}: " evalue <&5
         fi
     
-        contents="${new_content}"
-        new_content="${contents//\{\{ "${evar}" \}\}/"${evalue}"}"
-        new_content="${new_content//\{\{ cookiecutter."${evar}" \}\}/"${evalue}"}"
-    done < <(echo "${new_content}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
-
-    echo "${new_content}"
+        contents="${new_contents}"
+        new_contents="${contents//\{\{ "${evar}" \}\}/"${evalue}"}"
+        new_contents="${new_contents//\{\{ cookiecutter."${evar}" \}\}/"${evalue}"}"
+    done < <(echo "${new_contents}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
 }
 
 function get_start_line() {

@@ -12,6 +12,7 @@ my_template="myTemplate"
 
 tearDown() {
     rm -rf /tmp/foobar
+    rm -rf /tmp/cookie
 }
 
 #####################
@@ -39,20 +40,20 @@ test_parse_args__X_F() {
 #  Test get_dest_dir  #
 #######################
 test_get_dest_dir__NO_CONFIG() {
-    read dest_dir < <(get_dest_dir "${my_target}")
+    get_dest_dir "${my_target}"
     assertEquals "./" "${dest_dir}"
 }
 
 test_get_dest_dir__ROOT() {
     export ROOT_DIR=/tmp
-    read dest_dir < <(get_dest_dir "${my_target}")
+    get_dest_dir "${my_target}"
     assertEquals "/tmp" "${dest_dir}"
 }
 
 test_get_dest_dir__ROOT_AND_TARGET() {
     export ROOT_DIR=/tmp
     export TARGET_DIR=foobar
-    read dest_dir < <(get_dest_dir "${my_target}")
+    get_dest_dir "${my_target}"
     assertEquals "/tmp/foobar" "${dest_dir}"
 }
 
@@ -87,53 +88,72 @@ test_open_editor__NOVIM() {
 #  Test template_engine  #
 ##########################
 test_template_engine__START() {
-    read -r -d '' old_contents << EOM
-FOO
-{% START INSERT MODE %}
-EOM
-    new_contents="$(template_engine "${old_contents}")"
-    read -r -d '' expected << EOM
-FOO
+    read -r -d '' old_contents <<-EOM
+	FOO
+	{% START INSERT MODE %}
+	EOM
 
-EOM
+    template_engine "${old_contents}"
+
+    IFS= read -r -d '' expected <<-EOM
+	FOO
+	EOM
 
     assertEquals "${expected}" "${new_contents}"
 
     read -r -d '' old_contents <<-EOM
-FOO
-{% START NORMAL MODE %}
-EOM
+	FOO
+	{% START NORMAL MODE %}
+	EOM
 
-    new_contents="$(template_engine "${old_contents}")"
+    template_engine "${old_contents}"
     assertEquals "${expected}" "${new_contents}"
 }
 
 test_template_engine__ENVVAR() {
-    read -r -d '' old_contents << EOM
-FOO
-{{ my_variable }}
-EOM
+    read -r -d '' old_contents <<-EOM
+	FOO
+	{{ my_variable }}
+	EOM
     export my_variable="BAR"
-    new_contents="$(template_engine "${old_contents}")"
-    read -r -d '' expected << EOM
-FOO
-BAR
-EOM
+    template_engine "${old_contents}"
+    read -r -d '' expected <<-EOM
+	FOO
+	BAR
+	EOM
     
     assertEquals "${expected}" "${new_contents}"
 }
 
 test_template_engine__CC_ENVVAR() {
-    read -r -d '' old_contents << EOM
-FOO
-{{ cookiecutter.my_variable }}
-EOM
+    read -r -d '' old_contents <<-EOM
+	FOO
+	{{ cookiecutter.my_variable }}
+	EOM
     export my_variable="BAR"
-    new_contents="$(template_engine "${old_contents}")"
-    read -r -d '' expected << EOM
-FOO
-BAR
-EOM
+    template_engine "${old_contents}"
+    read -r -d '' expected <<-EOM
+	FOO
+	BAR
+	EOM
+    
+    assertEquals "${expected}" "${new_contents}"
+}
+
+test_template_engine__ENVVAR_NOT_DEFINED() {
+    export my_variable=
+
+    read -r -d '' old_contents <<-EOM
+	FOO
+	{{ my_variable }}
+	EOM
+
+    template_engine "${old_contents}" < <(echo "BAR")
+
+    read -r -d '' expected <<-EOM
+	FOO
+	BAR
+	EOM
     
     assertEquals "${expected}" "${new_contents}"
 }
@@ -146,6 +166,7 @@ test_main() {
     export PARENT_DIR=/tmp
     export TARGET_DIR=
     export COOKIE_DIR=/tmp/cookie
+
     mkdir -p "${COOKIE_DIR}"
 
     template="${COOKIE_DIR}"/template
@@ -154,6 +175,27 @@ test_main() {
     main "-T" "template" "-x" "foobar" &> /dev/null
     assertTrue '/tmp/foobar is NOT a file.' "[ -f /tmp/foobar ]"
     assertTrue '/tmp/foobar is NOT executable.' "[ -x /tmp/foobar ]"
+}
+
+test_main__LIST() {
+    export EDITOR=":"
+    export PARENT_DIR=/tmp
+    export TARGET_DIR=
+    export COOKIE_DIR=/tmp/cookie
+
+    mkdir -p "${COOKIE_DIR}"
+
+    template1="${COOKIE_DIR}"/footemp
+    template2="${COOKIE_DIR}"/bartemp
+    touch "${template1}"
+    touch "${template2}"
+
+    read -r -d '' expected <<-EOM
+    bartemp
+	footemp 
+	EOM
+
+    assertEquals "${expected}" "$(main "-l")"
 }
 
 source shunit2
