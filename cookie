@@ -116,7 +116,7 @@ function main() {
 function parse_args() {
     eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
     
-    USAGE="${USAGE} [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
+    USAGE="${USAGE} [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-l [TEMPLATE]] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
 
     # shellcheck disable=SC2153
     if [[ -n "${EDITOR}" ]]; then
@@ -154,8 +154,9 @@ function parse_args() {
 	    -h | --help
 	        View this help message.
 	
-	    -l | --list
-	        List available templates.
+	    -l [TEMPLATE] | --list [TEMPLATE]
+	        If TEMPLATE is provided, output template contents to STDOUT.
+	        Otherwise, list available templates. 
 	
 	    -T TEMPLATE | --template TEMPLATE
 	        The name of the template (e.g. mytemplate.sh).
@@ -193,10 +194,7 @@ function parse_args() {
                exit 0
                ;;
            -l|--list )
-               for T in "${COOKIE_DIR}"/*; do
-                   [[ -f "${T}" ]] && basename "${T}"
-               done
-               exit 0
+               list=true
                ;;
            -D|--bin-subdir )
                shift
@@ -235,6 +233,21 @@ function parse_args() {
     if [[ "${debug}" = true && "${verbose}" = true ]]; then
         PS4='$LINENO: '
         set -x
+    fi
+
+    if [[ "${list}" = true ]]; then
+        if [[ -n "$1" ]]; then
+            template="$1"; shift
+            full_template="${COOKIE_DIR}"/"${template}"
+            [[ -f "${full_template}" ]] || die "Template does not exist: ${full_template}"
+            cat "${full_template}"
+        else
+           for T in "${COOKIE_DIR}"/*; do
+               [[ -f "${T}" ]] && basename "${T}"
+           done
+        fi
+
+       exit 0
     fi
 
     if [[ -z "$1" ]] || [[ -z "${template}" ]]; then

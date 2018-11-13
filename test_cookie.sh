@@ -178,16 +178,14 @@ test_main() {
 }
 
 test_main__LIST() {
-    export EDITOR=":"
-    export PARENT_DIR=/tmp
-    export TARGET_DIR=
     export COOKIE_DIR=/tmp/cookie
 
     mkdir -p "${COOKIE_DIR}"
 
     template1="${COOKIE_DIR}"/footemp
     template2="${COOKIE_DIR}"/bartemp
-    touch "${template1}"
+
+    echo "FOOBAR" > "${template1}"
     touch "${template2}"
 
     read -r -d '' expected <<-EOM
@@ -196,6 +194,7 @@ test_main__LIST() {
 	EOM
 
     assertEquals "${expected}" "$(main "-l")"
+    assertEquals "FOOBAR" "$(main "-l" "footemp")"
 }
 
 source shunit2

@@ -6,9 +6,9 @@
 
 ## Usage
 ```
-Usage: cookie [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
+Usage: cookie [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-l [TEMPLATE]] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
 
-Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
+Initializes a new file (TARGET) using a predefined template (TEMPLATE).
 The target file can be a new script, configuration file, markup file, etc....
 After the target file has been initialized, it is opened for editing using the
 system's default editor.
@@ -37,8 +37,9 @@ Command-line Options:
     -h | --help
         View this help message.
 
-    -l | --list
-        List available templates.
+    -l [TEMPLATE] | --list [TEMPLATE]
+        If TEMPLATE is provided, output template contents to STDOUT.
+        Otherwise, list available templates. 
 
     -T TEMPLATE | --template TEMPLATE
         The name of the template (e.g. mytemplate.sh).
