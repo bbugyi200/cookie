@@ -2,7 +2,7 @@
 
 **Stop repeating yourself! Cookie templates make writing scripts, LaTeX documents, Makefiles, and other one-off files easier than ever!**
 
-![travis] ![codecov]
+![travis] ![codecov] [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Usage
 ```
@@ -166,3 +166,4 @@ Installation is as simple as cloning the repository with `git clone --recursive 
 [stow]: https://www.gnu.org/software/stow/manual/stow.html
 [travis]: https://travis-ci.org/bbugyi200/cookie.svg?branch=master
 [codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
+
