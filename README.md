@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/bbugyi200/cookie.svg?branch=master)](https://travis-ci.org/bbugyi200/cookie) [![codecov](https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg)](https://codecov.io/gh/bbugyi200/cookie) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+![demo]
+
 ## Usage
 ```
 Usage: cookie [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-l [TEMPLATE]] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
@@ -159,6 +161,7 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 Installation is as simple as cloning the repository with `git clone --recursive https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `make install`.
 
+[demo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/demo.gif
 [jinja]: https://github.com/pallets/jinja
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [scripts]: https://github.com/bbugyi200/scripts

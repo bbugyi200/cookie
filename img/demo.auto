@@ -1,4 +1,23 @@
 ################################################################################
 # Autodemo specification for 'cookie' project demonstration.                   #
 ################################################################################
-((50))# This is a demo for cookie.<<1>>[CLEAR]
+((50))# This is a demo for cookie.<<1>>[CLEAR]((100))# Use the '-l' option to list all templates.<<1>>[CLEAR]cookie -l
+((100))# Let's take a closer look at the 'full.sh' template.<<1>>[CLEAR]cookie -e full.sh
+:4
+<<0.5>>v$h<<1.5>>[ESC]:q
+((100))# We'll now create a new script using that template.<<1>>[CLEAR]# We use the '-x' option to make the script executable.<<1>>[CLEAR]cookie -T full.sh -x demo
+<<2>>((50))This is a test bash script created for the 'cookie' demo.[ESC]<<1>>:wq
+demo -h
+<<2.5>>((25))clear && rm ~/Dropbox/bin/main/demo
+((100))# Next we'll explore the 'hw.tex' template.<<1>>[CLEAR]cookie -e hw.tex
+:3
+<<0.5>>((50))^12lv68l<<2>>[ESC]:q
+((100))# Notice the template variables in the 'hw.tex' template?<<1>>[CLEAR]# Let's see how they work.<<1>>[CLEAR]cookie -T hw.tex -f hw5.tex
+5
+CS
+314
+03
+[ESC]:3
+<<0.5>>^12lv12l<<2>>[ESC]:wq
+((100))# We can also use environment variables to set those values.<<1>>[CLEAR]((25))clear && rm hw5.tex
+
