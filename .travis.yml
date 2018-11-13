@@ -2,6 +2,4 @@ language: bash
 install: ./scripts/install-deps
 script: ./test_cookie.sh
 after_success: bashcov ./test_cookie.sh
-os:
-    - linux
-    - osx
+os: linux
