@@ -7,8 +7,9 @@ install: install-gutils $(bin) $(script)
 	cp $(script) $(bin)/$(script)
 	chmod +x $(bin)/$(script)
 
-install-gutils: bashlibs/gutils.sh
-ifeq (,$(wildcard /usr/lib/gutils.sh))
+install-gutils:
+ifeq (,$(wildcard /usr/bin/gutils.sh))
+	git clone https://github.com/bbugyi200/bashlibs
 	make -C bashlibs DESTDIR=$(DESTDIR) install
 endif
 

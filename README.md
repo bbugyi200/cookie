@@ -1,6 +1,6 @@
 # cookie
 
-**Don't repeat yourself! Cookie templates make writing scripts easier than ever!**
+**Stop repeating yourself! Cookie templates make writing scripts, LaTeX documents, Makefiles, and other one-off files easier than ever!**
 
 ## Usage
 ```
