@@ -2,30 +2,32 @@
 
 # shellcheck disable=SC1090
 
-read -r -d '' doc << "EOM"
-Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
+read -r -d '' doc <<-EOM
+Initializes a new file (TARGET) using a predefined template (TEMPLATE).
 The target file can be a new script, configuration file, markup file, etc....
 After the target file has been initialized, it is opened for editing using the
 system's default editor.
 EOM
 
 # ---------- Source Libraries / Configs ----------
-source /usr/lib/gutils.sh
+# ===== Global Utilities =====
+source gutils.sh
 
 [ -d "${MY_XDG_CONFIG}" ] || mkdir -p "${MY_XDG_CONFIG}"
 
+# ===== Configuration File =====
 read -r -d '' default_config << "EOM"
 # The target file will be initialized in a location relative to this directory
 # unless you specify the `-f` option. In which case the target file will be
 # initialized relative to the current directory.
 #
 # Defaults to "./" (the current directory).
-PARENT_BIN_DIR=
+ROOT_DIR=
 
-# The target file is initialized in $PARENT_BIN_DIR/$DEFAULT_BIN_SUBDIR
+# The target file is initialized in $ROOT_DIR/$DEFAULT_TARGET_DIR
 # unless the `-D {DIR}` option is used. In which case the target file will
-# be initialized to $PARENT_BIN_DIR/{DIR}.
-DEFAULT_BIN_SUBDIR=
+# be initialized to $ROOT_DIR/{DIR}.
+DEFAULT_TARGET_DIR=
 
 # If specified, this command is evaluated after (and if) the target file
 # has its executable bit set. This can be used to create symlinks to
@@ -50,55 +52,40 @@ else
 fi
 
 # Set default bin directory if not specified in config file.
-if [[ -z "${PARENT_BIN_DIR}" ]]; then
-    PARENT_BIN_DIR=./
+if [[ -z "${ROOT_DIR}" ]]; then
+    ROOT_DIR=./
 fi
 
 if [[ -z "${COOKIE_DIR}" ]]; then
     COOKIE_DIR="${HOME}"/.cookiecutters
 fi
 
-# ---------- Function Definitions ----------
-function get_start_line() {
-    mark="$1"; shift
-    grep -n "${mark}" "${full_new_script_name}" | awk -F':' '{print $1}'
-    sed -i "s/${mark}//" "${full_new_script_name}"
-}
+# ---------- Traps ----------
+function exit_handler() {
+    EC="$1"; shift
 
-function open_editor() {
-    start_line="$1"; shift
-    mode="$1"; shift
-
-    if [[ "${editor}" == *"vim"* ]]; then
-        Vim_Opts=()
-        if [[ -n "${start_line}" ]]; then
-            Vim_Opts+=( +"${start_line}" )
-        fi
-
-        if [[ "${mode}" == "INSERT" ]]; then
-            Vim_Opts+=( +startinsert )
-        fi
-        
-        ${editor} "${Vim_Opts[@]}" "${full_new_script_name}"
-    else
-        ${editor} "${full_new_script_name}"
+    if [[ "${parent_dir_created}" = true && "${EC}" -ne 0 ]]; then
+        dmsg "Removing directory: ${dest_dir}"
+        rm -rf "${dest_dir}"
     fi
 }
 
-# ---------- Command-line Arguments ----------
-eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
+trap 'exit_handler $?' EXIT
 
-USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
-SCRIPTNAME="${SCRIPTNAME}"
+# ---------- Function Definitions ----------
+function parse_args() {
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
+    
+    USAGE="${USAGE} [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
 
-# shellcheck disable=SC2153
-if [[ -n "${EDITOR}" ]]; then
-    editor="${EDITOR}"
-else
-    editor="vim"
-fi
-
-read -r -d '' help << EOM
+    # shellcheck disable=SC2153
+    if [[ -n "${EDITOR}" ]]; then
+        EDITOR="${EDITOR}"
+    else
+        EDITOR="vim"
+    fi
+    
+    read -r -d '' help <<-EOM
 ${USAGE^}
 
 ${doc}
@@ -139,176 +126,230 @@ Command-line Options:
     -v | --verbose
         Enable verbose output.
 EOM
+    
+    executable="n"
+    force=false
+    template=
+    target=
+    debug=false
+    verbose=false
 
-executable="y"
-while [[ -n "$1" ]]; do
-    case $1 in
-       -c|--config )
-           "${editor}" "${config_file}"
-           exit 0
-           ;;
-       -d|--debug )
-           debug=true
-           ;;
-       -e|--edit )
-           shift
-           full_template_name="${COOKIE_DIR}"/"$1"
-           "${editor}" "${full_template_name}"
-           exit 0
-           ;;
-       -h|--help )
-           echo "$help"
-           exit 0
-           ;;
-       -l|--list )
-           for T in "${COOKIE_DIR}"/*; do
-               [[ -f "${T}" ]] && basename "${T}"
-           done
-           exit 0
-           ;;
-       -D|--bin-subdir )
-           shift
-           BIN_SUBDIR="$1"
-           ;;
-       --docs )
-           shift
-           eval "printf -- \"\${$1}\n\""
-           exit 0 
-           ;;
-       --executable )
-           shift
-           executable="$1"
-           ;;
-       -f )
-           force=true
-           ;;
-       -T|--template )
-           shift
-           template="$1"
-           ;;
-       -v|--verbose )
-           verbose=true
-           ;;
-       -x )
-           executable="y"
-           ;;
-       -- )
-           shift
-           break
-           ;;
-    esac
-    shift
-done
+    while [[ -n "$1" ]]; do
+        case $1 in
+           -c|--config )
+               "${EDITOR}" "${config_file}"
+               exit 0
+               ;;
+           -d|--debug )
+               debug=true
+               ;;
+           -e|--edit )
+               shift
+               "${EDITOR}" "${COOKIE_DIR}"/"$1"
+               exit 0
+               ;;
+           -h|--help )
+               echo "${help}"
+               exit 0
+               ;;
+           -l|--list )
+               for T in "${COOKIE_DIR}"/*; do
+                   [[ -f "${T}" ]] && basename "${T}"
+               done
+               exit 0
+               ;;
+           -D|--bin-subdir )
+               shift
+               TARGET_DIR="$1"
+               ;;
+           --docs )
+               shift
+               eval "printf -- \"\${$1}\n\""
+               exit 0 
+               ;;
+           --executable )
+               shift
+               executable="$1"
+               ;;
+           -f )
+               force=true
+               ;;
+           -T|--template )
+               shift
+               template="$1"
+               ;;
+           -v|--verbose )
+               verbose=true
+               ;;
+           -x )
+               executable="y"
+               ;;
+           -- )
+               shift
+               break
+               ;;
+        esac
+        shift
+    done
+    
+    if [[ "${debug}" = true && "${verbose}" = true ]]; then
+        PS4='$LINENO: '
+        set -x
+    fi
 
-if [[ "${debug}" = true && "${verbose}" = true ]]; then
-    PS4='$LINENO: '
-    set -x
-fi
+    if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
+        return 2
+    fi
+    
+    target="$1"; shift
 
-if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
-    die "${USAGE}" 2
-fi
+    echo "${template}" "${target}" "${executable}" "${force}"
+}
 
-# ---------- Traps ----------
-function exit_handler() {
-    EC="$1"; shift
+function get_dest_dir() {
+    target="$1"; shift
+    force="$1"; shift
 
-    if [[ "${parent_dir_created}" = true && "${EC}" -ne 0 ]]; then
-        dmsg "Removing directory: ${full_bin_path}"
-        rm -rf "${full_bin_path}"
+    # ===== Calculate Filesystem Paths =====
+    if [[ "$PWD" == "${ROOT_DIR}"* && -z "${TARGET_DIR}" ]] || [[ "${force}" = true ]]; then
+        dest_dir="$PWD"
+    elif [[ -n "${TARGET_DIR}" ]]; then
+        dest_dir="${ROOT_DIR}"/"${TARGET_DIR}"
+    elif [[ -n "${DEFAULT_TARGET_DIR}" ]]; then
+        dest_dir="${ROOT_DIR}"/"${DEFAULT_TARGET_DIR}"
+    else
+        dest_dir="${ROOT_DIR}"
+    fi
+    
+    target_dir="$(dirname "${target}")"
+    if [[ "${target_dir}" != "." ]]; then
+        dest_dir="${dest_dir}"/"${target_dir}"
+        target="$(basename "${target}")"
+    fi
+    
+    if [[ "${dest_dir}" != "./"* ]]; then
+        if ! [[ -d "${dest_dir}" ]]; then
+            dmsg "Creating directory: ${dest_dir}"
+            mkdir -p "${dest_dir}"
+            parent_dir_created=true
+        fi
+    fi
+
+    echo "${dest_dir}"
+}
+
+function template_engine() {
+    old_content="$1"; shift
+    new_content="${old_content}"
+
+    # ===== Template Statements and Substitutions =====
+    # >>> START HERE
+    istart_mark="{% START INSERT MODE %}"
+    istart_line="$(get_start_line "${istart_mark}" "${old_content}")"
+    
+    nstart_mark="{% START NORMAL MODE %}"
+    nstart_line="$(get_start_line "${nstart_mark}" "${old_content}")"
+
+    contents="${new_content}"
+    new_content="${contents//\{% START [A-z]* MODE %\}}"
+    
+    if [[ -n "${istart_line}" ]]; then
+        mode="INSERT"
+        start_line="${istart_line}"
+    elif [[ -n "${nstart_line}" ]]; then
+        mode="NORMAL"
+        start_line="${nstart_line}"
+    fi
+    
+    # >>> Environment Variable Replacements
+    grep_epttrn="{{ (.*?) }}"
+    sed_epttrn="{{ \([^ ]*\) }}"
+    
+    exec 5>&1  # save STDIN
+    while read evar; do
+        evalue="$(eval "echo \"\$${evar}\"")"
+        if [[ -z "${evalue}" ]]; then
+            read -p "${evar}: " evalue <&5
+        fi
+    
+        contents="${new_content}"
+        new_content="${contents//\{\{ "${evar}" \}\}/"${evalue}"}"
+        new_content="${new_content//\{\{ cookiecutter."${evar}" \}\}/"${evalue}"}"
+    done < <(echo "${new_content}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
+
+    echo "${new_content}"
+}
+
+function get_start_line() {
+    mark="$1"; shift
+    contents="$1"; shift
+
+    echo "${contents}" | grep -n "${mark}" | awk -F':' '{print $1}'
+}
+
+function open_editor() {
+    start_line="$1"; shift
+    mode="$1"; shift
+    full_target="$1"; shift
+
+    if [[ "${EDITOR}" == *"vim"* ]]; then
+        Vim_Opts=()
+        if [[ -n "${start_line}" ]]; then
+            Vim_Opts+=( +"${start_line}" )
+        fi
+
+        if [[ "${mode}" == "INSERT" ]]; then
+            Vim_Opts+=( +startinsert )
+        fi
+        
+        echo "${EDITOR} ${Vim_Opts[*]} ${full_target}"
+    else
+        echo "${EDITOR} ${full_target}"
     fi
 }
 
-trap 'exit_handler $?' EXIT
+if [[ "${SCRIPTNAME}" == "cookie" ]]; then
+    read template target executable force < <(parse_args "$@")
+    EC=$?
 
-# ---------- Global Variables ----------
-new_script_name="$1"; shift
-
-# ---------- Main ----------
-# ===== Calculate Filesystem Paths =====
-if [[ "$(pwd)" == "$PARENT_BIN_DIR/"* && -z "$BIN_SUBDIR" ]] || [[ "$force" = true ]]; then
-    full_bin_path="$(pwd)"
-elif [[ -z "$BIN_SUBDIR" ]]; then
-    full_bin_path="$PARENT_BIN_DIR"/"$DEFAULT_BIN_SUBDIR"
-else
-    full_bin_path="$PARENT_BIN_DIR"/"$BIN_SUBDIR"
-fi
-
-new_script_parent_dir="$(dirname "${new_script_name}")"
-if [[ "${new_script_parent_dir}" != "." ]]; then
-    full_bin_path="${full_bin_path}"/"${new_script_parent_dir}"
-    new_script_name="$(basename "${new_script_name}")"
-fi
-
-if [[ "$full_bin_path" != "./"* ]]; then
-    if ! [[ -d "${full_bin_path}" ]]; then
-        dmsg "Creating directory: ${full_bin_path}"
-        mkdir -p "${full_bin_path}"
-        parent_dir_created=true
+    if [[ "${EC}" -eq 2 ]]; then
+        die "${USAGE}" "${EC}"
+    elif [[ "${EC}" -ne 0 ]]; then
+        die "Unknown error while parsing command-line arguments."
     fi
 
-    cd "$full_bin_path" || exit 1
-    imsg "Entering $full_bin_path."
-fi
+    read dest_dir < <(get_dest_dir "${target}" "${force}")
 
-full_new_script_name="${new_script_name}"
-
-full_template_name="${COOKIE_DIR}"/"${template}"
-if ! [[ -f "${full_template_name}" ]]; then
-    die "Template does not exist: ${full_template_name}"
-fi
-
-imsg "Found matching template: $(basename "${full_template_name}")"
-
-# ===== Initialize New Script =====
-# >>> Copy Template Contents to New Script
-if ! [[ -f "$full_new_script_name" ]]; then
-    imsg "Initializing the '$full_new_script_name' script."
-    cp "${full_template_name}" "${full_new_script_name}"
-else
-    imsg "The '$full_new_script_name' script already exists."
-    open_editor "${start_line}"
-    exit 0
-fi
-
-# >>> Make New Script Executable
-if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
-    sudo chmod +x "$full_new_script_name"
-    if [[ -n "${EXEC_HOOK_CMD}" ]]; then
-        imsg "Running execute hook: ${EXEC_HOOK_CMD}"
-        eval "TARGET=${full_new_script_name} ${EXEC_HOOK_CMD}"
-    fi
-fi
-
-# ===== Template Statements and Substitutions =====
-# >>> START HERE
-istart_mark="{% START INSERT MODE %}"
-istart_line="$(get_start_line "${istart_mark}")"
-
-nstart_mark="{% START NORMAL MODE %}"
-nstart_line="$(get_start_line "${nstart_mark}")"
-
-if [[ -n "${istart_line}" ]]; then
-    mode="INSERT"
-    start_line="${istart_line}"
-elif [[ -n "${nstart_line}" ]]; then
-    mode="NORMAL"
-    start_line="${nstart_line}"
-fi
-
-# >>> Environment Variable Replacements
-grep_epttrn="{{ (.*?) }}"
-sed_epttrn="{{ \([^ ]*\) }}"
-
-exec 5>&1  # save STDIN
-while read evar; do
-    evalue="$(eval "echo \"\$${evar}\"")"
-    if [[ -z "${evalue}" ]]; then
-        read -p "${evar}: " evalue <&5
+    full_target="${dest_dir}"/"${target}"
+    full_template="${COOKIE_DIR}"/"${template}"
+    if ! [[ -f "${full_template}" ]]; then
+        die "Template does not exist: ${full_template}"
     fi
 
-    sed -i "s/${sed_epttrn}/${evalue}/" "${full_new_script_name}"
-done < <(grep -P -o "${grep_epttrn}" "${full_new_script_name}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
+    imsg "Found matching template: $(basename "${full_template}")"
 
-# ===== Open New Script in Editor =====
-open_editor "${start_line}" "${mode}"
+    # ===== Initialize New Script =====
+    # >>> Copy Template Contents to New Script
+    if ! [[ -f "${full_target}" ]]; then
+        imsg "Initializing the '${full_target}' script."
+        cp "${full_template}" "${full_target}"
+    else
+        imsg "The '${full_target}' script already exists."
+        eval "$(open_editor "" "NORMAL" "${full_target}")"
+        exit 0
+    fi
+    
+    # >>> Make New Script Executable
+    if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
+        sudo chmod +x "${full_target}"
+        if [[ -n "${EXEC_HOOK_CMD}" ]]; then
+            imsg "Running execute hook: ${EXEC_HOOK_CMD}"
+            eval "TARGET=${full_target} ${EXEC_HOOK_CMD}"
+        fi
+    fi
+
+    contents="$(cat "${full_target}")"
+    template_engine "${contents}" > "${full_target}"
+
+    eval "$(open_editor "${start_line}" "${mode}" "${full_target}")"
+fi
