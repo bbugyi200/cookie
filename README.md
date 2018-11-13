@@ -2,7 +2,7 @@
 
 **Stop repeating yourself! Cookie templates make writing scripts, LaTeX documents, Makefiles, and other one-off files easier than ever!**
 
-![travis] ![codecov] [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/bbugyi200/cookie.svg?branch=master)](https://travis-ci.org/bbugyi200/cookie) [![codecov](https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg)](https://codecov.io/gh/bbugyi200/cookie) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Usage
 ```
