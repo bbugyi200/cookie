@@ -2,6 +2,8 @@
 
 **Stop repeating yourself! Cookie templates make writing scripts, LaTeX documents, Makefiles, and other one-off files easier than ever!**
 
+![travis] ![codecov]
+
 ## Usage
 ```
 Usage: cookie [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
@@ -162,3 +164,5 @@ Installation is as simple as cloning the repository with `git clone --recursive 
 [clinks]: https://github.com/bbugyi200/scripts/blob/master/main/clinks
 [templates]: https://github.com/bbugyi200/dotfiles/tree/master/.cookiecutters
 [stow]: https://www.gnu.org/software/stow/manual/stow.html
+[travis]: https://travis-ci.org/bbugyi200/cookie.svg?branch=master
+[codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
