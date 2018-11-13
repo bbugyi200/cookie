@@ -11,10 +11,8 @@ EOM
 
 # ---------- Source Libraries / Configs ----------
 source /usr/lib/gutils.sh
-MY_XDG_DATA="${MY_XDG_DATA}"
 
 [ -d "${MY_XDG_CONFIG}" ] || mkdir -p "${MY_XDG_CONFIG}"
-[ -d "${MY_XDG_DATA}" ] || mkdir -p "${MY_XDG_DATA}"
 
 read -r -d '' default_config << "EOM"
 # The target file will be initialized in a location relative to this directory
@@ -36,6 +34,11 @@ DEFAULT_BIN_SUBDIR=
 # The $TARGET variable, which contains the full path of the target file,
 # will be injected into the environment of this command.
 EXEC_HOOK_CMD=
+
+# The directory used to store cookie templates.
+# 
+# Defaults to "~/.cookiecutters".
+COOKIE_DIR=
 EOM
 
 config_file="${MY_XDG_CONFIG}"/config
@@ -49,6 +52,10 @@ fi
 # Set default bin directory if not specified in config file.
 if [[ -z "${PARENT_BIN_DIR}" ]]; then
     PARENT_BIN_DIR=./
+fi
+
+if [[ -z "${COOKIE_DIR}" ]]; then
+    COOKIE_DIR="${HOME}"/.cookiecutters
 fi
 
 # ---------- Function Definitions ----------
@@ -145,7 +152,7 @@ while [[ -n "$1" ]]; do
            ;;
        -e|--edit )
            shift
-           full_template_name="${MY_XDG_DATA}"/"$1"
+           full_template_name="${COOKIE_DIR}"/"$1"
            "${editor}" "${full_template_name}"
            exit 0
            ;;
@@ -154,8 +161,8 @@ while [[ -n "$1" ]]; do
            exit 0
            ;;
        -l|--list )
-           for T in "${MY_XDG_DATA}"/*; do
-               basename "${T}"
+           for T in "${COOKIE_DIR}"/*; do
+               [[ -f "${T}" ]] && basename "${T}"
            done
            exit 0
            ;;
@@ -246,7 +253,7 @@ fi
 
 full_new_script_name="${new_script_name}"
 
-full_template_name="${MY_XDG_DATA}"/"${template}"
+full_template_name="${COOKIE_DIR}"/"${template}"
 if ! [[ -f "${full_template_name}" ]]; then
     die "Template does not exist: ${full_template_name}"
 fi

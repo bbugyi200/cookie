@@ -50,7 +50,7 @@ Command-line Options:
 
 ## Templates
 
-Templates should be stored in the `$XDG_DATA_HOME/cookie` directory.
+Templates are stored in the directory specified by `$COOKIE_DIR` which, if not specified in the configuration file (see the [Configuration](#config) section), defaults to `~/.cookiecutters` (the same directory used by `cookiecutter` to store templates).
 
 See my personal [templates] for examples on how you can use templates.
 
@@ -80,7 +80,7 @@ The following statement does the same thing but will start vim in NORMAL mode (v
 {% START NORMAL HERE %}
 ```
 
-## Configuration File
+## <a name="config">Configuration</a>
 
 The configuration file can be found at `$XDG_CONFIG_HOME/cookie/config`. The following options are available:
 
@@ -104,6 +104,11 @@ DEFAULT_BIN_SUBDIR=
 # The $TARGET variable, which contains the full path of the target file,
 # will be injected into the environment of this command.
 EXEC_HOOK_CMD=
+
+# The directory used to store cookie templates.
+# 
+# Defaults to "~/.cookiecutters".
+COOKIE_DIR=
 ```
 
 ## Using Shell Aliases / Functions
@@ -129,7 +134,7 @@ alias texinit='cookie -T template.tex -f'
 
 Let us now take a look at a few examples of how cookie might be useful. 
 
-For reference, these are the configuration settings that I use:
+For reference, my personal cookie templates can be found [here][templates] and these are the configuration settings that I use:
 ``` bash
 PARENT_BIN_DIR="/home/bryan/Dropbox/bin"
 DEFAULT_BIN_SUBDIR="main"
@@ -155,5 +160,5 @@ Installation is as simple as cloning the repository with `git clone --recursive 
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [scripts]: https://github.com/bbugyi200/scripts
 [clinks]: https://github.com/bbugyi200/scripts/blob/master/main/clinks
-[templates]: https://github.com/bbugyi200/dotfiles/tree/master/.local/share/cookie
+[templates]: https://github.com/bbugyi200/dotfiles/tree/master/.cookiecutters
 [stow]: https://www.gnu.org/software/stow/manual/stow.html
