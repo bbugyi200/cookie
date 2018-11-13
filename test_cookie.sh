@@ -18,7 +18,7 @@ tearDown() {
 #  Test parse_args  #
 #####################
 test_parse_args__NOX_NOF() {
-    read template target executable force < <(parse_args "-T" "${my_template}" "${my_target}")
+    parse_args "-T" "${my_template}" "${my_target}"
     assertEquals 0 "$?"
 
     assertEquals "${template}" "${my_template}"
@@ -28,7 +28,7 @@ test_parse_args__NOX_NOF() {
 }
 
 test_parse_args__X_F() {
-    read _ _ executable force < <(parse_args "-T" "${my_template}" "-x" "-f" "${my_target}")
+    parse_args "-T" "${my_template}" "-x" "-f" "${my_target}"
     assertEquals 0 "$?"
 
     assertEquals "y" "${executable}"

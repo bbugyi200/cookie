@@ -74,7 +74,7 @@ trap 'exit_handler $?' EXIT
 
 # ---------- Function Definitions ----------
 function main() {
-    read template target executable force < <(parse_args "$@")
+    parse_args "$@"
     EC=$?
 
     if [[ "${EC}" -eq 2 ]]; then
