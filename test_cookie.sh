@@ -4,9 +4,19 @@
 
 source ./cookie
 
+#########################################
+#  Test Variables and Setup / TearDown  #
+#########################################
 my_target="myTarget"
 my_template="myTemplate"
 
+tearDown() {
+    rm -rf /tmp/foobar
+}
+
+#####################
+#  Test parse_args  #
+#####################
 test_parse_args__NOX_NOF() {
     read template target executable force < <(parse_args "-T" "${my_template}" "${my_target}")
     assertEquals 0 "$?"
@@ -25,6 +35,9 @@ test_parse_args__X_F() {
     assertEquals true "${force}"
 }
 
+#######################
+#  Test get_dest_dir  #
+#######################
 test_get_dest_dir__NO_CONFIG() {
     read dest_dir < <(get_dest_dir "${my_target}")
     assertEquals "./" "${dest_dir}"
@@ -43,6 +56,9 @@ test_get_dest_dir__ROOT_AND_TARGET() {
     assertEquals "/tmp/foobar" "${dest_dir}"
 }
 
+######################
+#  Test open_editor  #
+######################
 test_open_editor__VIM() {
     export EDITOR="vim"
     read editor_cmd < <(open_editor "" "" "${my_target}")
@@ -67,6 +83,9 @@ test_open_editor__NOVIM() {
     assertEquals "nano ${my_target}" "${editor_cmd}"
 }
 
+##########################
+#  Test template_engine  #
+##########################
 test_template_engine__START() {
     read -r -d '' old_contents << EOM
 FOO
@@ -119,6 +138,9 @@ EOM
     assertEquals "${expected}" "${new_contents}"
 }
 
+###############
+#  Test main  #
+###############
 test_main() {
     export EDITOR=":"
     export PARENT_DIR=/tmp
@@ -129,12 +151,9 @@ test_main() {
     template="${COOKIE_DIR}"/template
     touch "${template}"
 
-    main "-T" "template" "foobar" &> /dev/null
-    assertTrue '/tmp/foobar is not a file.' "[ -f /tmp/foobar ]"
-}
-
-tearDown() {
-    rm -rf /tmp/foobar
+    main "-T" "template" "-x" "foobar" &> /dev/null
+    assertTrue '/tmp/foobar is NOT a file.' "[ -f /tmp/foobar ]"
+    assertTrue '/tmp/foobar is NOT executable.' "[ -x /tmp/foobar ]"
 }
 
 source shunit2
