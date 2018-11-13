@@ -81,7 +81,7 @@ function open_editor() {
 # ---------- Command-line Arguments ----------
 eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
 
-USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET"
+USAGE="${USAGE} [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
 SCRIPTNAME="${SCRIPTNAME}"
 
 # shellcheck disable=SC2153
@@ -111,7 +111,7 @@ Command-line Options:
         Add / edit cookie template.
 
     --executable={y|n}
-        Make TARGET executable. Defaults to 'y'.
+        Make TARGET executable. Defaults to 'n'.
 
     -f | --force
         Force TARGET initialization to be relative to the current
@@ -123,24 +123,17 @@ Command-line Options:
     -l | --list
         List available templates.
 
-    -N
-        Equivalent to --executable=n.
-
     -T TEMPLATE | --template TEMPLATE
         The name of the template (e.g. mytemplate.sh).
 
-    --use-extension={y|n}
-        Append file extension to TARGET. Defaults to 'n'.
-
     -x
-        Equivalent to --use-extension=y
+        Equivalent to --executable=y
 
     -v | --verbose
         Enable verbose output.
 EOM
 
 executable="y"
-use_extension="n"
 while [[ -n "$1" ]]; do
     case $1 in
        -c|--config )
@@ -182,13 +175,6 @@ while [[ -n "$1" ]]; do
        -f )
            force=true
            ;;
-       -N )
-           executable="n"
-           ;;
-       --use-extension )
-           shift
-           use_extension="$1"
-           ;;
        -T|--template )
            shift
            template="$1"
@@ -197,7 +183,7 @@ while [[ -n "$1" ]]; do
            verbose=true
            ;;
        -x )
-           use_extension="y"
+           executable="y"
            ;;
        -- )
            shift
@@ -230,9 +216,6 @@ trap 'exit_handler $?' EXIT
 
 # ---------- Global Variables ----------
 new_script_name="$1"; shift
-if [[ "${template}" == *"."* ]]; then
-    extension="${template##*.}"
-fi
 
 # ---------- Main ----------
 # ===== Calculate Filesystem Paths =====
@@ -261,11 +244,7 @@ if [[ "$full_bin_path" != "./"* ]]; then
     imsg "Entering $full_bin_path."
 fi
 
-if [[ "${use_extension}" == "y" || "${use_extension}" == "yes" ]]; then
-    full_new_script_name="${new_script_name}.${extension}"
-else
-    full_new_script_name="${new_script_name}"
-fi
+full_new_script_name="${new_script_name}"
 
 full_template_name="${MY_XDG_DATA}"/"${template}"
 if ! [[ -f "${full_template_name}" ]]; then

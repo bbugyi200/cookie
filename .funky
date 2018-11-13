@@ -1,1 +1,1 @@
-{"vvv": "vim cookie README.md Makefile \"$@\"", "c": "\\rm -rf HW* \"$@\""}
+{"vvv": "vim cookie README.md Makefile \"$@\"", "c": "\\rm -rf HW* \"$@\"", "I": "sudo make install \"$@\""}

@@ -4,7 +4,7 @@
 
 ## Usage
 ```
-Usage: cookie [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-N | --executable={y|n}] [-x | --use-extension={y|n}] [-v] [-T TEMPLATE] TARGET
+Usage: cookie [-c] [-d] [-D BIN_SUBDIR] [-e TEMPLATE] [-f] [-h] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
 
 Initializes a new file (`TARGET`) using a predefined template (`TEMPLATE`).
 The target file can be a new script, configuration file, markup file, etc....
@@ -23,10 +23,10 @@ Command-line Options:
         default bin directory (see the configuration file).
 
     -e TEMPLATE | --edit TEMPLATE
-        Edit cookie template.
+        Add / edit cookie template.
 
     --executable={y|n}
-        Make TARGET executable. Defaults to 'y'.
+        Make TARGET executable. Defaults to 'n'.
 
     -f | --force
         Force TARGET initialization to be relative to the current
@@ -38,17 +38,11 @@ Command-line Options:
     -l | --list
         List available templates.
 
-    -N
-        Equivalent to --executable=n.
-
     -T TEMPLATE | --template TEMPLATE
         The name of the template (e.g. mytemplate.sh).
 
-    --use-extension={y|n}
-        Append file extension to TARGET. Defaults to 'n'.
-
     -x
-        Equivalent to --use-extension=y
+        Equivalent to --executable=y
 
     -v | --verbose
         Enable verbose output.
@@ -120,15 +114,15 @@ functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
-alias ainit='cookie -T template.awk -D awk --use-extension=y'
-alias binit='cookie -T minimal.sh'
-alias Binit='cookie -T full.sh'
-hw() { ASSIGNMENT_NUMBER="$1" cookie -T hw.tex -f -x -N "${@:2}" HW"$1"/hw"$1"; }
-alias minit='cookie -T c.make -f --executable=n Makefile'
-alias mtinit='cookie -T gtest.make -f --executable=n Makefile'
-alias pyinit='cookie -T template.py'
-alias pytinit='cookie -T pytest.py -f --executable=n --use-extension=y'
-alias texinit='cookie -T template.tex -f --executable=n --use-extension=y'
+alias ainit='cookie -T template.awk -D awk -x'
+alias binit='cookie -T minimal.sh -x'
+alias Binit='cookie -T full.sh -x'
+hw() { ASSIGNMENT_NUMBER="$1" cookie -T hw.tex -f "${@:2}" HW"$1"/hw"$1".tex; }
+alias minit='cookie -T c.make -f Makefile'
+alias mtinit='cookie -T gtest.make -f Makefile'
+alias pyinit='cookie -T template.py -x'
+pytinit() { cookie -T pytest.py -f test_"$1".py; }
+alias texinit='cookie -T template.tex -f'
 ```
 
 ## Examples
