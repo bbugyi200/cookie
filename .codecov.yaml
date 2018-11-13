@@ -1,2 +1,7 @@
 coverage:
     range: "70...100"
+
+ignore:
+    - "scripts/*"
+    - "Makefile"
+    - "test_*.sh"
