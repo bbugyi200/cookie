@@ -2,6 +2,7 @@ bindir=$(DESTDIR)/usr/bin
 runtests=tests/runtests
 script=cookie
 
+
 .PHONY: install
 install: install-gutils $(bindir) $(script)
 	cp $(script) $(bindir)/$(script)
