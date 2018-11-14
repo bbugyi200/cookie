@@ -1,1 +1,1 @@
-{"C": "echo \"Makefile .travis.yml .codecov.yaml\"", "D": "echo \"README.md CHANGELOG.md\" \"$@\"", "i": "sudo make install \"$@\"", "S": "echo \"cookie\" \"$@\"", "T": "echo \"test_cookie.sh\" \"$@\"", "SS": "echo \"./scripts/install-deps\" \"$@\"", "t": "./test_cookie.sh \"$@\""}
+{"C": "echo \"Makefile .travis.yml .codecov.yaml\"", "D": "echo \"README.md CHANGELOG.md\" \"$@\"", "i": "sudo make install \"$@\"", "S": "echo \"cookie\" \"$@\"", "T": "echo \"test_cookie.sh\" \"$@\"", "SS": "echo \"./scripts/install-deps\" \"$@\""}
