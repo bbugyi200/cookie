@@ -160,6 +160,7 @@ to initialize a full featured bash script (bells and whistles included) into the
 ## Similar Projects
 
 * [cookiecutter] - A command-line utility that creates projects from cookiecutters (project templates).
+* [j2cli] - Jinja2 Command-Line Tool.
 
 ## Installation
 
@@ -174,4 +175,5 @@ Installation is as simple as cloning the repository with `git clone https://gith
 [stow]: https://www.gnu.org/software/stow/manual/stow.html
 [travis]: https://travis-ci.org/bbugyi200/cookie.svg?branch=master
 [codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
+[j2cli]: https://github.com/kolypto/j2cli
 
