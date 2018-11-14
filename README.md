@@ -157,6 +157,10 @@ Binit -D GTD bar
 ```
 to initialize a full featured bash script (bells and whistles included) into the `/home/bryan/Dropbox/GTD` directory.
 
+## Similar Projects
+
+* [cookiecutter] - A command-line utility that creates projects from cookiecutters (project templates).
+
 ## Installation
 
 Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `make install`.
