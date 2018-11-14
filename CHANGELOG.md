@@ -13,6 +13,7 @@ Fixed:
 * With variables with repeated occurrences in the template, cookie was
   forgetting the variables value and thus prompting the user repeatedly
   for the same variable.
+* EXEC_HOOK_CMD was not evaluating ${TARGET}
 
 ### v0.1.0 (2018-11-13)
 

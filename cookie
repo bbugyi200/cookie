@@ -99,8 +99,8 @@ function main() {
     if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
         sudo chmod +x "${full_target}"
         if [[ -n "${EXEC_HOOK_CMD}" ]]; then
-            imsg "Running execute hook: ${EXEC_HOOK_CMD}"
-            eval "TARGET=${full_target} ${EXEC_HOOK_CMD}"
+            TARGET="${full_target}" eval "imsg \"Running execute hook: ${EXEC_HOOK_CMD}\""
+            TARGET="${full_target}" eval "${EXEC_HOOK_CMD}"
         fi
     fi
 
