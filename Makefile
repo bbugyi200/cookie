@@ -18,8 +18,8 @@ endif
 $(bindir):
 	@mkdir -p $(bindir)
 
-uninstall: $(bindir)/$(script)
-	@rm $(bindir)/$(script)
+uninstall:
+	@rm -f $(bindir)/$(script)
 
 .PHONY: uninstall-all
 uninstall-all: uninstall clean
