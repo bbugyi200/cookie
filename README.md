@@ -166,7 +166,7 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `sudo make install`.
 
-[demo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/demo.gif
+[demo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/demo.gif "Cookie Demonstration GIF"
 [jinja]: https://github.com/pallets/jinja
 [cookiecutter]: https://github.com/audreyr/cookiecutter
 [scripts]: https://github.com/bbugyi200/scripts

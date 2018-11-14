@@ -84,8 +84,6 @@ function main() {
         die "Template does not exist: ${full_template}"
     fi
 
-    imsg "Found matching template: $(basename "${full_template}")"
-
     # ===== Initialize New Script =====
     # >>> Copy Template Contents to New Script
     if ! [[ -f "${full_target}" ]]; then
