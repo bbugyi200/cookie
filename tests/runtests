@@ -1,7 +1,15 @@
 #!/bin/bash
 
+EC=0
+
 printf "%s\n" "------- test_cookie.sh --------"
-./tests/test_cookie.sh
+if ! ./tests/test_cookie.sh; then
+    EC=1
+fi
 
 printf "\n%s\n" "------- test_make.sh --------"
-sudo ./tests/test_make.sh
+if ! sudo ./tests/test_make.sh; then
+    EC=1
+fi
+
+exit "${EC}"
