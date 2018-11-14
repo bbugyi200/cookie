@@ -198,7 +198,7 @@ function parse_args() {
                ;;
            -D|--bin-subdir )
                shift
-               TARGET_DIR="$1"
+               target_dir="$1"
                ;;
            --docs )
                shift
@@ -262,10 +262,10 @@ function get_dest_dir() {
     force="$1"; shift
 
     # ===== Calculate Filesystem Paths =====
-    if [[ "$PWD" == "${ROOT_DIR}"* && -z "${TARGET_DIR}" ]] || [[ "${force}" = true ]]; then
+    if [[ "$PWD" == "${ROOT_DIR}"/* && -z "${target_dir}" ]] || [[ "${force}" = true ]]; then
         dest_dir="$PWD"
-    elif [[ -n "${TARGET_DIR}" ]]; then
-        dest_dir="${ROOT_DIR}"/"${TARGET_DIR}"
+    elif [[ -n "${target_dir}" ]]; then
+        dest_dir="${ROOT_DIR}"/"${target_dir}"
     elif [[ -n "${DEFAULT_TARGET_DIR}" ]]; then
         dest_dir="${ROOT_DIR}"/"${DEFAULT_TARGET_DIR}"
     else
@@ -273,6 +273,7 @@ function get_dest_dir() {
     fi
     
     target_dir="$(dirname "${target}")"
+
     if [[ "${target_dir}" != "." ]]; then
         dest_dir="${dest_dir}"/"${target_dir}"
         target="$(basename "${target}")"

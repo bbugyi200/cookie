@@ -46,15 +46,48 @@ test_get_dest_dir__NO_CONFIG() {
 
 test_get_dest_dir__ROOT() {
     export ROOT_DIR=/tmp
+    export DEFAULT_TARGET_DIR=
+    export target_dir=
+
     get_dest_dir "${my_target}"
     assertEquals "/tmp" "${dest_dir}"
 }
 
 test_get_dest_dir__ROOT_AND_TARGET() {
     export ROOT_DIR=/tmp
-    export TARGET_DIR=foobar
+    export DEFAULT_TARGET_DIR=foobar
+    export target_dir=
+
     get_dest_dir "${my_target}"
     assertEquals "/tmp/foobar" "${dest_dir}"
+}
+
+test_get_dest_dir__ROOT_AND_TARGET_IN_ROOT() {
+    export ROOT_DIR=/tmp
+    export DEFAULT_TARGET_DIR=foobar
+    export target_dir=
+
+    cd /tmp || return 1
+
+    get_dest_dir "${my_target}"
+    assertEquals "/tmp/foobar" "${dest_dir}"
+}
+
+test_get_dest_dir__ROOT_AND_TARGET_IN_ROOT_SUBDIR() {
+    export ROOT_DIR=/tmp
+    export DEFAULT_TARGET_DIR=foobar
+    export target_dir=
+
+    other=/tmp/other
+    mkdir "${other}"
+    OLD_PWD=$PWD
+    cd "${other}" || return 1
+
+    get_dest_dir "${my_target}"
+    assertEquals "/tmp/other" "${dest_dir}"
+
+    cd "$OLD_PWD" || return 1
+    rm -rf "${other}"
 }
 
 ######################
@@ -148,11 +181,11 @@ test_template_engine__ENVVAR_NOT_DEFINED() {
 	{{ my_variable }}
 	EOM
 
-    template_engine "${old_contents}" < <(echo "BAR")
+    template_engine "${old_contents}" < <(echo "MYVAR")
 
     read -r -d '' expected <<-EOM
 	FOO
-	BAR
+	MYVAR
 	EOM
     
     assertEquals "${expected}" "${new_contents}"
@@ -164,7 +197,7 @@ test_template_engine__ENVVAR_NOT_DEFINED() {
 test_main() {
     export EDITOR=":"
     export PARENT_DIR=/tmp
-    export TARGET_DIR=
+    export DEFAULT_TARGET_DIR=
     export COOKIE_DIR=/tmp/cookie
 
     mkdir -p "${COOKIE_DIR}"
