@@ -58,29 +58,29 @@ test_get_dest_dir__ROOT_AND_TARGET() {
 }
 
 ######################
-#  Test open_editor  #
+#  Test editor_cmd  #
 ######################
-test_open_editor__VIM() {
+test_editor_cmd__VIM() {
     export EDITOR="vim"
-    read editor_cmd < <(open_editor "" "" "${my_target}")
+    read editor_cmd < <(editor_cmd "" "" "${my_target}")
     assertEquals "vim  ${my_target}" "${editor_cmd}"
 }
 
-test_open_editor__VIM_NSTART() {
+test_editor_cmd__VIM_NSTART() {
     export EDITOR="vim"
-    read editor_cmd < <(open_editor "5" "" "${my_target}")
+    read editor_cmd < <(editor_cmd "5" "" "${my_target}")
     assertEquals "vim +5 ${my_target}" "${editor_cmd}"
 }
 
-test_open_editor__VIM_ISTART() {
+test_editor_cmd__VIM_ISTART() {
     export EDITOR="vim"
-    read editor_cmd < <(open_editor "5" "INSERT" "${my_target}")
+    read editor_cmd < <(editor_cmd "5" "INSERT" "${my_target}")
     assertEquals "vim +5 +startinsert ${my_target}" "${editor_cmd}"
 }
 
-test_open_editor__NOVIM() {
+test_editor_cmd__NOVIM() {
     export EDITOR="nano"
-    read editor_cmd < <(open_editor "5" "INSERT" "${my_target}")
+    read editor_cmd < <(editor_cmd "5" "INSERT" "${my_target}")
     assertEquals "nano ${my_target}" "${editor_cmd}"
 }
 

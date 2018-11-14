@@ -93,7 +93,7 @@ function main() {
         cp "${full_template}" "${full_target}"
     else
         imsg "The '${full_target}' script already exists."
-        eval "$(open_editor "" "NORMAL" "${full_target}")"
+        eval "$(editor_cmd "" "NORMAL" "${full_target}")"
         exit 0
     fi
     
@@ -110,7 +110,7 @@ function main() {
     template_engine "${contents}"
     echo "${new_contents}" > "${full_target}"
 
-    eval "$(open_editor "${start_line}" "${mode}" "${full_target}")"
+    eval "$(editor_cmd "${start_line}" "${mode}" "${full_target}")"
 }
 
 function parse_args() {
@@ -334,7 +334,7 @@ function get_start_line() {
     echo "${contents}" | grep -n "${mark}" | awk -F':' '{print $1}'
 }
 
-function open_editor() {
+function editor_cmd() {
     start_line="$1"; shift
     mode="$1"; shift
     full_target="$1"; shift
