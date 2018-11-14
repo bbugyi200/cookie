@@ -3,5 +3,4 @@ coverage:
 
 ignore:
     - "scripts/*"
-    - "Makefile"
-    - "test_*.sh"
+    - "tests/*"

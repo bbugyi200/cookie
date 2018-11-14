@@ -4,7 +4,7 @@ sudo: required
 
 install: ./scripts/install-deps
 
-script: ./test_cookie.sh
+script: ./tests/runtests
 
 os: linux
 
