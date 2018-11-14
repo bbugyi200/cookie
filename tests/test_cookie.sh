@@ -175,17 +175,31 @@ test_template_engine__CC_ENVVAR() {
 
 test_template_engine__ENVVAR_NOT_DEFINED() {
     export my_variable=
-
     read -r -d '' old_contents <<-EOM
 	FOO
 	{{ my_variable }}
 	EOM
 
-    template_engine "${old_contents}" < <(echo "MYVAR")
-
     read -r -d '' expected <<-EOM
 	FOO
-	MYVAR
+	BAR
+	EOM
+
+    template_engine "${old_contents}" < <(echo "BAR")
+    
+    assertEquals "${expected}" "${new_contents}"
+}
+
+test_template_engine__NO_SPACES() {
+    read -r -d '' old_contents <<-EOM
+	FOO
+	{{my_variable}}
+	EOM
+    export my_variable="BAR"
+    template_engine "${old_contents}"
+    read -r -d '' expected <<-EOM
+	FOO
+	BAR
 	EOM
     
     assertEquals "${expected}" "${new_contents}"

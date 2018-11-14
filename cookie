@@ -312,8 +312,8 @@ function template_engine() {
     fi
     
     # >>> Environment Variable Replacements
-    grep_epttrn="{{ (.*?) }}"
-    sed_epttrn="{{ \([^ ]*\) }}"
+    grep_epttrn="{{[ ]*(.*?)[ ]*}}"
+    sed_epttrn="{{[ ]*\([^ ]*\)[ ]*}}"
     
     exec 5>&0  # save STDIN
     while read evar; do
@@ -322,9 +322,8 @@ function template_engine() {
             read -p "${evar}: " evalue <&5
         fi
     
-        contents="${new_contents}"
-        new_contents="${contents//\{\{ "${evar}" \}\}/"${evalue}"}"
-        new_contents="${new_contents//\{\{ cookiecutter."${evar}" \}\}/"${evalue}"}"
+        new_contents="$(echo "${new_contents}" | sed "s/{{[ ]*${evar}[ ]*}}/${evalue}/g")"
+        new_contents="$(echo "${new_contents}" | sed "s/{{[ ]*cookiecutter.${evar}[ ]*}}/${evalue}/g")"
     done < <(echo "${new_contents}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
 }
 
