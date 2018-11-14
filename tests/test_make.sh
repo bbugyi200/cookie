@@ -1,3 +1,5 @@
+#!/bin/bash
+
 EC=0
 capout=/tmp/cookie.capout
 
