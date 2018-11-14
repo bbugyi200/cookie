@@ -3,15 +3,17 @@ runtests=test_cookie.sh
 script=cookie
 
 .PHONY: install
-install: install-gutils $(bindir) $(script)
-	cp $(script) $(bindir)/$(script)
+install: $(script).temp $(bindir)
+	mv $(script).temp $(bindir)/$(script)
 	chmod +x $(bindir)/$(script)
+
+$(script).temp: install-gutils $(script)
+	sudo sed -e "/source gutils.sh/ r bashlibs/gutils.sh" -e "/source gutils.sh/d" $(script) > $(script).temp
 
 .PHONY: install-gutils
 install-gutils:
-ifeq (,$(wildcard /usr/bin/gutils.sh))
+ifeq (,$(wildcard ./bashlibs/gutils.sh))
 	git clone https://github.com/bbugyi200/bashlibs
-	make -C bashlibs DESTDIR=$(DESTDIR) install
 endif
 
 $(bindir):
@@ -19,10 +21,6 @@ $(bindir):
 
 uninstall: $(bindir)/$(script)
 	@rm $(bindir)/$(script)
-
-.PHONY: uninstall-all
-uninstall-all: uninstall
-	@make -C bashlibs uninstall
 
 check: $(runtests)
 	./$(runtests)
