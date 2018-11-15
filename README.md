@@ -157,6 +157,10 @@ Binit -D GTD bar
 ```
 to initialize a full featured bash script (bells and whistles included) into the `/home/bryan/Dropbox/GTD` directory.
 
+## Advanced Usage
+
+I wrote a short [blog post][blog] describing a few of Cookie's more advanced features.
+
 ## Similar Projects
 
 * [cookiecutter] - A command-line utility that creates projects from cookiecutters (project templates).
@@ -166,6 +170,7 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `sudo make install`.
 
+[blog]: https://bryanbugyi.com/blog/tips-and-tricks-for-using-cookie/
 [demo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/demo.gif "Cookie Demonstration GIF"
 [jinja]: https://github.com/pallets/jinja
 [cookiecutter]: https://github.com/audreyr/cookiecutter
