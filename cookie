@@ -114,7 +114,7 @@ function main() {
 function parse_args() {
     eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
     
-    USAGE="${USAGE} [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-l [TEMPLATE]] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET"
+    export USAGE_GRAMMAR=( "[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET" "-c" "-e TEMPLATE" "-h" "-l [TEMPLATE]" )
 
     # shellcheck disable=SC2153
     if [[ -n "${EDITOR}" ]]; then
@@ -124,11 +124,14 @@ function parse_args() {
     fi
     
     read -r -d '' help <<-EOM
-	${USAGE^}
+    $(usage)
 		
 	${doc}
+
+	Positional Arguments:
+	    TARGET          The name of the file to initialize.
 	
-	Command-line Options:
+	Optional Arguments:
 	    -d | --debug
 	        Enable debug mode.
 	
@@ -227,11 +230,6 @@ function parse_args() {
         esac
         shift
     done
-    
-    if [[ "${debug}" = true && "${verbose}" = true ]]; then
-        PS4='$LINENO: '
-        set -x
-    fi
 
     if [[ "${list}" = true ]]; then
         if [[ -n "$1" ]]; then
@@ -247,9 +245,14 @@ function parse_args() {
 
        exit 0
     fi
+    
+    if [[ "${debug}" = true && "${verbose}" = true ]]; then
+        PS4='$LINENO: '
+        set -x
+    fi
 
     if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
-        die "${USAGE}" 2
+        die "$(usage)" 2
     fi
     
     target="$1"; shift

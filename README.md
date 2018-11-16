@@ -8,14 +8,21 @@
 
 ## Usage
 ```
-Usage: cookie [-c] [-d] [-D TARGET_DIR] [-e TEMPLATE] [-f] [-h] [-l [TEMPLATE]] [-x | --executable={y|n}] [-v] [-T TEMPLATE] TARGET
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET
+       cookie -c
+       cookie -e TEMPLATE
+       cookie -h
+       cookie -l [TEMPLATE]
 
 Initializes a new file (TARGET) using a predefined template (TEMPLATE).
 The target file can be a new script, configuration file, markup file, etc....
 After the target file has been initialized, it is opened for editing using the
 system's default editor.
 
-Command-line Options:
+Positional Arguments:
+    TARGET          The name of the file to initialize.
+
+Optional Arguments:
     -d | --debug
         Enable debug mode.
 
