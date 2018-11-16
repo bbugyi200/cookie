@@ -159,7 +159,7 @@ to initialize a full featured bash script (bells and whistles included) into the
 
 ## Advanced Usage
 
-I wrote a short [blog post][blog] describing a few of Cookie's more advanced features.
+I wrote a short [blog post][blog] describing a few of cookie's more advanced features.
 
 ## Similar Projects
 
