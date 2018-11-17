@@ -114,11 +114,13 @@ function main() {
 function parse_args() {
     eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
     
-    export USAGE_GRAMMAR=("[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET"
-                          "-c"
-                          "-e TEMPLATE"
-                          "-h"
-                          "-l [TEMPLATE]")
+    export USAGE_GRAMMAR=(
+        "[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET"
+        "-c"
+        "-e TEMPLATE"
+        "-h"
+        "-l [TEMPLATE]"
+    )
 
     # shellcheck disable=SC2153
     if [[ -n "${EDITOR}" ]]; then
