@@ -1,7 +1,5 @@
 # cookie [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Stop%20repeating%20yourself!%20Cookie%20templates%20make%20writing%20scripts,%20LaTeX%20documents,%20Makefiles,%20and%20other%20one-off%20files%20easier%20than%20ever!&url=https://github.com/bbugyi200/funky&via=bryan_bugyi&hashtags=Linux,commandlineftw,developers)
 
-<img src="https://raw.githubusercontent.com/bbugyi200/cookie/master/img/logo.png" width="96" height="96"/>
-
 **Stop repeating yourself! Cookie templates make writing scripts, LaTeX documents, Makefiles, and other one-off files easier than ever!**
 
 [![Build Status](https://travis-ci.org/bbugyi200/cookie.svg?branch=master)](https://travis-ci.org/bbugyi200/cookie) [![codecov](https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg)](https://codecov.io/gh/bbugyi200/cookie) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
