@@ -14,6 +14,7 @@ Fixed:
   forgetting the variables value and thus prompting the user repeatedly
   for the same variable.
 * EXEC_HOOK_CMD was not evaluating ${TARGET}
+* Using absolute path with TARGET argument.
 
 ### v0.1.0 (2018-11-13)
 
