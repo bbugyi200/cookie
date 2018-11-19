@@ -90,6 +90,16 @@ test_get_dest_dir__ROOT_AND_TARGET_IN_ROOT_SUBDIR() {
     rm -rf "${other}"
 }
 
+test_get_dest_dir__ABSOLUTE_PATH() {
+    export ROOT_DIR=/tmp
+    export DEFAULT_TARGET_DIR=
+    export target_dir=
+
+    get_dest_dir "/home/$HOME/my_target"
+
+    assertEquals "/home/$HOME" "${dest_dir}"
+}
+
 ######################
 #  Test editor_cmd  #
 ######################
