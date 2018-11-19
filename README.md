@@ -13,6 +13,7 @@ Usage: cookie [-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLA
        cookie -e TEMPLATE
        cookie -h
        cookie -l [TEMPLATE]
+       cookie -r TEMPLATE
 
 Initializes a new file (TARGET) using a predefined template (TEMPLATE).
 The target file can be a new script, configuration file, markup file, etc....
@@ -49,6 +50,9 @@ Optional Arguments:
     -l [TEMPLATE] | --list [TEMPLATE]
         If TEMPLATE is provided, output template contents to STDOUT.
         Otherwise, list available templates. 
+
+    -r TEMPLATE | --remove TEMPLATE
+        Delete cookie template.
 
     -T TEMPLATE | --template TEMPLATE
         The name of the template (e.g. mytemplate.sh).
