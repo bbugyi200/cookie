@@ -10,6 +10,10 @@ Added:
 
 * The `--remove` option.
 
+Changed:
+
+* The syntax for startline template statements (cookie now uses `{% INSERT %}` and `{% NORMAL %}`).
+
 ### v0.1.1 (2018-11-18)
 
 Fixed:
