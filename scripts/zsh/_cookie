@@ -1,0 +1,14 @@
+#compdef cookie
+
+_arguments "-c[config]" \
+    "-d[debug output]" \
+    "-D[bin-subdir]" ":SUBDIR" \
+    "-e[edit template]:filename:_files -W ${HOME}/.cookiecutters" \
+    "-f[force relative directory]" \
+    "-h[help menu]" \
+    "-l[list templates]::filename:_files -W ${HOME}/.cookiecutters" \
+    "-r[remove template]:filename:_files -W ${HOME}/.cookiecutters" \
+    "-T[template file]:filename:_files -W ${HOME}/.cookiecutters" \
+    "-x[make executable]" \
+    "-v[verbose output]" \
+    ":target"

@@ -10,6 +10,7 @@ Added:
 
 * The `--remove` option.
 * Upgraded the startline template statements so now vim will identify the column number of the statement as well as the line number. In effect, cookie is now able to start vim with the cursor positioned at the exact spot where the startline statement was.
+* A ZSH completion script to the GitHub repository and into the standard `install` rule for the project's Makefile.
 
 Changed:
 

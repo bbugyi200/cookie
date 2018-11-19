@@ -181,6 +181,10 @@ I wrote a short [blog post][blog] describing a few of cookie's more advanced fea
 
 Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `sudo make install`.
 
+### ZSH Completion
+
+The appropriate completion function should be installed automatically when you run `sudo make install`. You can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed on your system's `$fpath` variable (normally `/usr/share/zsh/site-functions/` works).
+
 [blog]: https://bryanbugyi.com/blog/tips-and-tricks-for-using-cookie/
 [logo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/logo.png
 [demo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/demo.gif "Cookie Demonstration GIF"
@@ -193,4 +197,5 @@ Installation is as simple as cloning the repository with `git clone https://gith
 [travis]: https://travis-ci.org/bbugyi200/cookie.svg?branch=master
 [codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
 [j2cli]: https://github.com/kolypto/j2cli
+[zsh-completion]: https://github.com/bbugyi200/cookie/blob/master/scripts/zsh/_cookie
 
