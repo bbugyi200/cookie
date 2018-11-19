@@ -6,6 +6,8 @@ releases.
 
 ### Unreleased
 
+### v0.1.1 (2018-11-18)
+
 Fixed:
 
 * When user is in root dir, default subdir should be used
