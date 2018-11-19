@@ -18,7 +18,7 @@ endif
 
 .PHONY: install-zsh
 install-zsh:
-ifneq ($(wildcard ~/Dropbox/.*),)
+ifneq ($(wildcard /usr/share/zsh/site-functions/.*),)
 	cp ./scripts/zsh/_cookie $(DESTDIR)/usr/share/zsh/site-functions/
 endif
 
