@@ -54,7 +54,7 @@ test_parse_args__X_F() {
 
 test_parse_args__CONFIG() {
     export EDITOR="echo"
-    assertEquals "${HOME}/.config/test_cookie.sh/config" "$(parse_args -c)"
+    assertContains "$(parse_args -c)" "/config"
 }
 
 test_parse_args__EDIT_NO_EXISTS() {
@@ -308,14 +308,14 @@ test_main__TARGET_ALREADY_EXISTS() {
 
     echo ":)" > "${foobar}"
 
-    (main "-T" "${fake_temp}" "${foobar}"); EC=$?
+    (main "-T" "${fake_temp}" "${foobar}" 2> /dev/null); EC=$?
     assertTrue "cookie fails when the target already exists" "[[ ${EC} -eq 0 ]]"
     assertEquals ":)" "$(cat ${foobar})"
 }
 
 test_main__EXEC_HOOK_CMD() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
-    (main -T "${fake_temp}" --executable=y "${foobar}")
+    (main -T "${fake_temp}" --executable=y "${foobar}" 2> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
