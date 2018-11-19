@@ -95,7 +95,7 @@ function main() {
         cp "${full_template}" "${full_target}"
     else
         imsg "The '${full_target}' script already exists."
-        eval "$(editor_cmd "" "NORMAL" "${full_target}")"
+        eval "$(editor_cmd "" "" "NORMAL" "${full_target}")"
         exit 0
     fi
     
@@ -112,7 +112,7 @@ function main() {
     template_engine "${contents}"
     echo "${new_contents}" > "${full_target}"
 
-    eval "$(editor_cmd "${start_line}" "${mode}" "${full_target}")"
+    eval "$(editor_cmd "${start_line}" "${start_col}" "${mode}" "${full_target}")"
 }
 
 function parse_args() {
@@ -341,21 +341,22 @@ function template_engine() {
     # ===== Template Statements and Substitutions =====
     # >>> START HERE
     istart_mark="{% INSERT %}"
-    istart_line="$(get_start_line "${istart_mark}" "${old_contents}")"
+    read -r iline icol <<< "$(get_start_line "${istart_mark}" "${old_contents}")"
     
     nstart_mark="{% NORMAL %}"
-    nstart_line="$(get_start_line "${nstart_mark}" "${old_contents}")"
+    read -r nline ncol <<< "$(get_start_line "${nstart_mark}" "${old_contents}")"
 
-    contents="${new_contents}"
-    new_contents="${contents//\{% INSERT %\}}"
+    new_contents="${new_contents//\{% INSERT %\}}"
     new_contents="${new_contents//\{% NORMAL %\}}"
     
-    if [[ -n "${istart_line}" ]]; then
+    if [[ -n "${iline}" ]] && [[ "${iline}" -gt 0 ]]; then
         mode="INSERT"
-        start_line="${istart_line}"
-    elif [[ -n "${nstart_line}" ]]; then
+        start_line="${iline}"
+        start_col="${icol}"
+    elif [[ -n "${nline}" ]] && [[ "${nline}" -gt 0 ]]; then
         mode="NORMAL"
-        start_line="${nstart_line}"
+        start_line="${nline}"
+        start_col="${ncol}"
     fi
     
     # >>> Environment Variable Replacements
@@ -379,18 +380,24 @@ function get_start_line() {
     mark="$1"; shift
     contents="$1"; shift
 
-    echo "${contents}" | grep -n "${mark}" | awk -F':' '{print $1}'
+    line="$(echo "${contents}" | grep -n "${mark}" | awk -F':' '{print $1}')"
+
+    line_contents="$(echo "${contents}" | grep "${mark}")"
+    col="$(awk -v line_contents="${line_contents}" 'BEGIN{print index(line_contents, "{")}')"
+
+    printf "${line} ${col}\n"
 }
 
 function editor_cmd() {
     start_line="$1"; shift
+    start_col="$1"; shift
     mode="$1"; shift
     full_target="$1"; shift
 
     if [[ "${EDITOR}" == *"vim"* ]]; then
         Vim_Opts=()
-        if [[ -n "${start_line}" ]]; then
-            Vim_Opts+=( +"${start_line}" )
+        if [[ -n "${start_line}" ]] && [[ -n "${start_col}" ]]; then
+            Vim_Opts+=( "-c" "\"call cursor(${start_line},${start_col})\"" )
         fi
 
         if [[ "${mode}" == "INSERT" ]]; then

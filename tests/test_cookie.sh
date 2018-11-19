@@ -35,7 +35,7 @@ tearDown() {
 #  Test parse_args                                                            #
 ###############################################################################
 test_parse_args__NOX_NOF() {
-    parse_args "-T" "${my_template}" "${my_target}"
+    parse_args "-T" "${my_template}" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
     assertEquals "${template}" "${my_template}"
@@ -45,7 +45,7 @@ test_parse_args__NOX_NOF() {
 }
 
 test_parse_args__X_F() {
-    parse_args "-T" "${my_template}" "-x" "-f" "${my_target}"
+    parse_args "-T" "${my_template}" "-x" "-f" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
     assertEquals "y" "${executable}"
@@ -54,7 +54,8 @@ test_parse_args__X_F() {
 
 test_parse_args__CONFIG() {
     export EDITOR="echo"
-    assertContains "$(parse_args -c)" "/config"
+    output="$(parse_args -c)"
+    assertEquals "${output##*/}" "config"
 }
 
 test_parse_args__EDIT_NO_EXISTS() {
@@ -75,7 +76,7 @@ test_parse_args__REMOVE() {
     export COOKIE_DIR=/tmp
 
     assertTrue "${fake_temp} NEVER existed to begin with" "[[ -f /tmp/${fake_temp} ]]"
-    (parse_args "-r" "${fake_temp}" < <(printf "y"))
+    (parse_args "-r" "${fake_temp}" < <(printf "y") &> /dev/null)
     assertFalse "${fake_temp} STILL exists" "[[ -f /tmp/${fake_temp} ]]"
 }
 
@@ -139,25 +140,31 @@ test_get_dest_dir__ABSOLUTE_PATH() {
 ###############################################################################
 test_editor_cmd__VIM() {
     export EDITOR="vim"
-    read editor_cmd < <(editor_cmd "" "" "${my_target}")
+    read editor_cmd < <(editor_cmd "" "" "" "${my_target}")
     assertEquals "vim  ${my_target}" "${editor_cmd}"
 }
 
 test_editor_cmd__VIM_NSTART() {
     export EDITOR="vim"
-    read editor_cmd < <(editor_cmd "5" "" "${my_target}")
-    assertEquals "vim +5 ${my_target}" "${editor_cmd}"
+    read editor_cmd < <(editor_cmd "5" "15" "" "${my_target}")
+    assertEquals "vim -c \"call cursor(5,15)\" ${my_target}" "${editor_cmd}"
 }
 
 test_editor_cmd__VIM_ISTART() {
     export EDITOR="vim"
-    read editor_cmd < <(editor_cmd "5" "INSERT" "${my_target}")
-    assertEquals "vim +5 +startinsert ${my_target}" "${editor_cmd}"
+    read editor_cmd < <(editor_cmd "5" "15" "INSERT" "${my_target}")
+    assertEquals "vim -c \"call cursor(5,15)\" +startinsert ${my_target}" "${editor_cmd}"
+}
+
+test_editor_cmd__BAD_ARGS() {
+    export EDITOR="vim"
+    read editor_cmd < <(editor_cmd "0" "" "INSERT" "${my_target}")
+    assertEquals "vim +startinsert ${my_target}" "${editor_cmd}"
 }
 
 test_editor_cmd__NOVIM() {
     export EDITOR="nano"
-    read editor_cmd < <(editor_cmd "5" "INSERT" "${my_target}")
+    read editor_cmd < <(editor_cmd "5" "15" "INSERT" "${my_target}")
     assertEquals "nano ${my_target}" "${editor_cmd}"
 }
 
@@ -185,6 +192,36 @@ test_template_engine__START() {
 
     template_engine "${old_contents}"
     assertEquals "${expected}" "${new_contents}"
+}
+
+test_template_engine__START_LINE_AND_COL_CHECK() {
+    read -r -d '' contents <<-EOM
+	FOO
+	    {% INSERT %}
+	EOM
+
+    template_engine "${contents}"
+    assertEquals "2" "${start_line}"
+    assertEquals "5" "${start_col}"
+
+    read -r -d '' contents <<-EOM
+	FOO
+
+	BAR   {% NORMAL %}   { OTHER STUFF }
+	EOM
+
+    template_engine "${contents}"
+    assertEquals "3" "${start_line}"
+    assertEquals "7" "${start_col}"
+
+    read -r -d '' contents <<-EOM
+	FOO
+	{% INSERT %}
+	EOM
+
+    template_engine "${contents}"
+    assertEquals "2" "${start_line}"
+    assertEquals "1" "${start_col}"
 }
 
 test_template_engine__ENVVAR() {
@@ -302,12 +339,12 @@ test_main__LIST() {
 }
 
 test_main__TEMPLATE_NOT_EXIST() {
-    (main -T fake_template.sh foobar 2> /dev/null); EC=$?
+    (main -T fake_template.sh foobar &> /dev/null); EC=$?
     assertTrue "cookie fails to die when the template doesn't exist" "[[ ${EC} -ne 0 ]]"
 }
 
 test_main__USAGE_ERROR() {
-    (main 2> /dev/null); EC=$?
+    (main &> /dev/null); EC=$?
     assertTrue "cookie failed to die with a usage message" "[[ ${EC} -eq 2 ]]"
 }
 
@@ -316,14 +353,14 @@ test_main__TARGET_ALREADY_EXISTS() {
 
     echo ":)" > "${foobar}"
 
-    (main "-T" "${fake_temp}" "${foobar}" 2> /dev/null); EC=$?
+    (main "-T" "${fake_temp}" "${foobar}" &> /dev/null); EC=$?
     assertTrue "cookie fails when the target already exists" "[[ ${EC} -eq 0 ]]"
     assertEquals ":)" "$(cat ${foobar})"
 }
 
 test_main__EXEC_HOOK_CMD() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
-    (main -T "${fake_temp}" --executable=y "${foobar}" 2> /dev/null)
+    (main -T "${fake_temp}" --executable=y "${foobar}" &> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
@@ -331,7 +368,7 @@ test_main__EXEC_HOOK_CMD() {
 test_main__BIN_SUBDIR() {
     export ROOT_DIR=/tmp
 
-    (main "-T" "${fake_temp}" "-D" "foodir" "foobar"); EC=$?
+    (main "-T" "${fake_temp}" "-D" "foodir" "foobar" &> /dev/null); EC=$?
     assertTrue "cookie fails when using -D option" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie does not respect the -D option" "[[ -f /tmp/foodir/foobar ]]"
 }
@@ -339,7 +376,7 @@ test_main__BIN_SUBDIR() {
 test_main__DEEP_TARGET() {
     export ROOT_DIR=/tmp
 
-    (main "-T" "${fake_temp}" "foo/bar"); EC=$?
+    (main "-T" "${fake_temp}" "foo/bar" &> /dev/null); EC=$?
     assertTrue "cookie fails when using deep target" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie fails to initialize deep target" "[[ -f /tmp/foo/bar ]]"
 }
