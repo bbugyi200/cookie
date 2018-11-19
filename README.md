@@ -88,12 +88,12 @@ To ensure compatibility with files in cookiecutter templates, you may also prefa
 #### Mark Start Point for Editing (only works when vim is set as the default system editor)
 If the following statement is found in the template, vim will start with the cursor on that line (after removing the statement) and will start in INSERT mode:
 ```
-{% START INSERT MODE %}
+{% INSERT %}
 ```
 
 The following statement does the same thing but will start vim in NORMAL mode (vim's default behavior):
 ```
-{% START NORMAL MODE %}
+{% NORMAL %}
 ```
 
 ## <a name="config">Configuration</a>

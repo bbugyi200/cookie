@@ -167,7 +167,7 @@ test_editor_cmd__NOVIM() {
 test_template_engine__START() {
     read -r -d '' old_contents <<-EOM
 	FOO
-	{% START INSERT MODE %}
+	{% INSERT %}
 	EOM
 
     template_engine "${old_contents}"
@@ -180,7 +180,7 @@ test_template_engine__START() {
 
     read -r -d '' old_contents <<-EOM
 	FOO
-	{% START NORMAL MODE %}
+	{% NORMAL %}
 	EOM
 
     template_engine "${old_contents}"

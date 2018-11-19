@@ -340,14 +340,15 @@ function template_engine() {
 
     # ===== Template Statements and Substitutions =====
     # >>> START HERE
-    istart_mark="{% START INSERT MODE %}"
+    istart_mark="{% INSERT %}"
     istart_line="$(get_start_line "${istart_mark}" "${old_contents}")"
     
-    nstart_mark="{% START NORMAL MODE %}"
+    nstart_mark="{% NORMAL %}"
     nstart_line="$(get_start_line "${nstart_mark}" "${old_contents}")"
 
     contents="${new_contents}"
-    new_contents="${contents//\{% START [A-z]* MODE %\}}"
+    new_contents="${contents//\{% INSERT %\}}"
+    new_contents="${new_contents//\{% NORMAL %\}}"
     
     if [[ -n "${istart_line}" ]]; then
         mode="INSERT"
