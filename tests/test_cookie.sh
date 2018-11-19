@@ -71,6 +71,14 @@ test_parse_args__EDIT_EXISTS() {
     assertEquals "${foobar}" "$(parse_args -e foobar)"
 }
 
+test_parse_args__REMOVE() {
+    export COOKIE_DIR=/tmp
+
+    assertTrue "${fake_temp} NEVER existed to begin with" "[[ -f /tmp/${fake_temp} ]]"
+    (parse_args "-r" "${fake_temp}" < <(printf "y"))
+    assertFalse "${fake_temp} STILL exists" "[[ -f /tmp/${fake_temp} ]]"
+}
+
 ###############################################################################
 #  Test get_dest_dir                                                          #
 ###############################################################################

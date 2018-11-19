@@ -116,7 +116,7 @@ function main() {
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,template:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,remove:,template:,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
@@ -125,6 +125,7 @@ function parse_args() {
         "-e TEMPLATE"
         "-h"
         "-l [TEMPLATE]"
+        "-r TEMPLATE"
     )
     # LCOV_EXCL_STOP
 
@@ -170,6 +171,9 @@ function parse_args() {
 	    -l [TEMPLATE] | --list [TEMPLATE]
 	        If TEMPLATE is provided, output template contents to STDOUT.
 	        Otherwise, list available templates. 
+
+        -r TEMPLATE | --remove TEMPLATE
+            Delete cookie template.
 	
 	    -T TEMPLATE | --template TEMPLATE
 	        The name of the template (e.g. mytemplate.sh).
@@ -229,6 +233,11 @@ function parse_args() {
            -f )
                force=true
                ;;
+           -r|--remove )
+               shift
+               template="$1"
+               remove=true
+               ;;
            -T|--template )
                shift
                template="$1"
@@ -259,6 +268,18 @@ function parse_args() {
            done
         fi
 
+       exit 0
+    fi
+
+    if [[ "${remove}" = true ]]; then
+       full_template="${COOKIE_DIR}"/"${template}"
+       [[ -f "${full_template}" ]] || die "Template does not exist: ${full_template}"
+       read -n1 -p "Are you sure you want to delete the ${template} template? [y/n]: " choice
+       if [[ "${choice}" == "y" ]]; then
+           rm "${full_template}"
+           printf "\n"
+           imsg "The ${template} template has been deleted."
+       fi
        exit 0
     fi
     
