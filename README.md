@@ -183,7 +183,7 @@ Installation is as simple as cloning the repository with `git clone https://gith
 
 ### ZSH Completion
 
-The appropriate completion function should be installed automatically when you run `sudo make install`. You can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed on your system's `$fpath` variable (normally `/usr/share/zsh/site-functions/` works).
+The appropriate completion function should be installed automatically when you run `sudo make install`. You can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed on your system's `$fpath` variable (normally the `/usr/share/zsh/site-functions/` directory works).
 
 [blog]: https://bryanbugyi.com/blog/tips-and-tricks-for-using-cookie/
 [logo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/logo.png
