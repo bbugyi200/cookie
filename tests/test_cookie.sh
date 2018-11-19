@@ -326,7 +326,14 @@ test_main__BIN_SUBDIR() {
     (main "-T" "${fake_temp}" "-D" "foodir" "foobar"); EC=$?
     assertTrue "cookie fails when using -D option" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie does not respect the -D option" "[[ -f /tmp/foodir/foobar ]]"
+}
 
+test_main__DEEP_TARGET() {
+    export ROOT_DIR=/tmp
+
+    (main "-T" "${fake_temp}" "foo/bar"); EC=$?
+    assertTrue "cookie fails when using deep target" "[[ ${EC} -eq 0 ]]"
+    assertTrue "cookie fails to initialize deep target" "[[ -f /tmp/foo/bar ]]"
 }
 
 source shunit2
