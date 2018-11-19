@@ -43,6 +43,7 @@ EXEC_HOOK_CMD=
 COOKIE_DIR=
 EOM
 
+# LCOV_EXCL_START
 config_file="${MY_XDG_CONFIG}"/config
 if [[ -f "${config_file}" ]]; then
     source "${config_file}"
@@ -50,6 +51,7 @@ else
     imsg "Configruation file has been initialized."
     echo "${default_config}" > "${config_file}"
 fi
+# LCOV_EXCL_STOP
 
 # Set default bin directory if not specified in config file.
 if [[ -z "${ROOT_DIR}" ]]; then
@@ -63,14 +65,16 @@ fi
 # ---------- Traps ----------
 function exit_handler() {
     EC="$1"; shift
+    created_by_me="$1"; shift
+    dest_dir="$1"; shift
 
-    if [[ "${parent_dir_created}" = true && "${EC}" -ne 0 ]]; then
+    if [[ "${created_by_me}" = true && "${EC}" -ne 0 ]]; then
         dmsg "Removing directory: ${dest_dir}"
         rm -rf "${dest_dir}"
     fi
 }
 
-trap 'exit_handler $?' EXIT
+trap 'exit_handler $? ${parent_dir_created} ${dest_dir}' EXIT
 
 # ---------- Function Definitions ----------
 function main() {
@@ -191,7 +195,7 @@ function parse_args() {
                exit 0
                ;;
            -d|--debug )
-               debug=true
+               debug=true  # LCOV_EXCL_LINE
                ;;
            -e|--edit )
                shift
@@ -199,8 +203,10 @@ function parse_args() {
                exit 0
                ;;
            -h|--help )
+               # LCOV_EXCL_START
                echo "${help}"
                exit 0
+               # LCOV_EXCL_STOP
                ;;
            -l|--list )
                list=true
@@ -210,9 +216,11 @@ function parse_args() {
                target_dir="$1"
                ;;
            --docs )
+               # LCOV_EXCL_START
                shift
                eval "printf -- \"\${$1}\n\""
                exit 0 
+               # LCOV_EXCL_STOP
                ;;
            --executable )
                shift
@@ -226,7 +234,7 @@ function parse_args() {
                template="$1"
                ;;
            -v|--verbose )
-               verbose=true
+               verbose=true  # LCOV_EXCL_LINE
                ;;
            -x )
                executable="y"
@@ -255,8 +263,10 @@ function parse_args() {
     fi
     
     if [[ "${debug}" = true && "${verbose}" = true ]]; then
+        # LCOV_EXCL_START
         PS4='$LINENO: '
         set -x
+        # LCOV_EXCL_STOP
     fi
 
     if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
@@ -340,7 +350,7 @@ function template_engine() {
     
         new_contents="$(echo "${new_contents}" | sed "s/{{[ ]*${evar}[ ]*}}/${evalue}/g")"
         new_contents="$(echo "${new_contents}" | sed "s/{{[ ]*cookiecutter.${evar}[ ]*}}/${evalue}/g")"
-    done < <(echo "${new_contents}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')
+    done < <(echo "${new_contents}" | grep -P -o "${grep_epttrn}" | sed "s/${sed_epttrn}/\1/" | sed 's/cookiecutter\.//')  # LCOV_EXCL_LINE
 }
 
 function get_start_line() {
@@ -372,5 +382,5 @@ function editor_cmd() {
 }
 
 if [[ "${SCRIPTNAME}" == "cookie" ]]; then
-    main "$@"
+    main "$@"  # LCOV_EXCL_LINE
 fi
