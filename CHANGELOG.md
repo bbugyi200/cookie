@@ -6,17 +6,21 @@ releases.
 
 ### Unreleased
 
+Added:
+
+* The `--remove` option.
+
 ### v0.1.1 (2018-11-18)
 
 Fixed:
 
-* When user is in root dir, default subdir should be used
-* Spaces in template variables should be optional
+* When user is in root dir, default subdir should be used.
+* Spaces in template variables should be optional.
 * With variables with repeated occurrences in the template, cookie was
   forgetting the variables value and thus prompting the user repeatedly
   for the same variable.
-* EXEC_HOOK_CMD was not evaluating ${TARGET}
-* Can now use absolute path with TARGET argument.
+* `EXEC_HOOK_CMD` was not evaluating `${TARGET}`.
+* Can now use absolute path with `TARGET` argument.
 
 ### v0.1.0 (2018-11-13)
 
