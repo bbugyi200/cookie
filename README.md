@@ -198,4 +198,3 @@ The appropriate completion function should be installed automatically when you r
 [codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
 [j2cli]: https://github.com/kolypto/j2cli
 [zsh-completion]: https://github.com/bbugyi200/cookie/blob/master/scripts/zsh/_cookie
-
