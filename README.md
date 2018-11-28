@@ -8,7 +8,7 @@
 
 ## Usage
 ```
-Usage: cookie [-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-m MODE] [-v] -T TEMPLATE TARGET
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -T TEMPLATE TARGET
        cookie -c
        cookie -e TEMPLATE
        cookie -h
@@ -36,9 +36,6 @@ Optional Arguments:
 
     -e TEMPLATE | --edit TEMPLATE
         Add / edit cookie template.
-
-    --executable={y|n}
-        Make TARGET executable. Defaults to 'n'.
 
     -f | --force
         Force TARGET initialization to be relative to the current

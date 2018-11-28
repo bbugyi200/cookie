@@ -119,11 +119,11 @@ function main() {
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,executable:,remove:,template:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,template:,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-m MODE] [-v] -T TEMPLATE TARGET"
+        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -T TEMPLATE TARGET"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -161,9 +161,6 @@ function parse_args() {
 	    -e TEMPLATE | --edit TEMPLATE
 	        Add / edit cookie template.
 	
-	    --executable={y|n}
-	        Make TARGET executable. Defaults to 'n'.
-	
 	    -f | --force
 	        Force TARGET initialization to be relative to the current
 	        directory.
@@ -191,7 +188,6 @@ function parse_args() {
 	        Enable verbose output.
 	EOM
     
-    executable="n"
     force=false
     template=
     target=
@@ -231,10 +227,6 @@ function parse_args() {
                eval "printf -- \"\${$1}\n\""
                exit 0 
                # LCOV_EXCL_STOP
-               ;;
-           --executable )
-               shift
-               executable="$1"
                ;;
            -f )
                force=true

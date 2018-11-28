@@ -40,7 +40,6 @@ test_parse_args__NOX_NOF() {
 
     assertEquals "${template}" "${my_template}"
     assertEquals "${my_target}" "${target}"
-    assertEquals "n" "${executable}"
     assertEquals false "${force}"
 }
 
@@ -360,7 +359,7 @@ test_main__TARGET_ALREADY_EXISTS() {
 
 test_main__EXEC_HOOK_CMD() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
-    (main -T "${fake_temp}" --executable=y "${foobar}" &> /dev/null)
+    (main -T "${fake_temp}" -x "${foobar}" &> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
