@@ -49,7 +49,8 @@ Optional Arguments:
         Otherwise, list available templates. 
 
     -m MODE | --mode MODE
-        Sets file mode bits. Accepts all forms recognized by 'chmod'.
+        Sets file mode bits. Accepts any form for MODE that is recognized
+        by the 'chmod' command.
 
     -r TEMPLATE | --remove TEMPLATE
         Delete cookie template.
