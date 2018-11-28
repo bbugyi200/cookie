@@ -48,7 +48,7 @@ test_parse_args__X_F() {
     parse_args "-T" "${my_template}" "-x" "-f" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
-    assertEquals "y" "${executable}"
+    assertEquals "+x" "${mode}"
     assertEquals true "${force}"
 }
 
@@ -379,6 +379,16 @@ test_main__DEEP_TARGET() {
     (main "-T" "${fake_temp}" "foo/bar" &> /dev/null); EC=$?
     assertTrue "cookie fails when using deep target" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie fails to initialize deep target" "[[ -f /tmp/foo/bar ]]"
+
+    rm -rf "/tmp/foo/bar"
+}
+
+test_main__MODE() {
+    export ROOT_DIR=/tmp
+
+    (main "-T" "${fake_temp}" "-m" "666" "${foobar}"); EC=$?
+    assertTrue "cookie fails when using --mode option" "[[ ${EC} -eq 0 ]]"
+    assertEquals "666" "$(stat -c "%a" "${foobar}")"
 }
 
 source shunit2

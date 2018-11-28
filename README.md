@@ -8,7 +8,7 @@
 
 ## Usage
 ```
-Usage: cookie [-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-m MODE] [-v] -T TEMPLATE TARGET
        cookie -c
        cookie -e TEMPLATE
        cookie -h
@@ -51,6 +51,9 @@ Optional Arguments:
         If TEMPLATE is provided, output template contents to STDOUT.
         Otherwise, list available templates. 
 
+    -m MODE | --mode MODE
+        Sets file mode bits. Accepts all forms recognized by 'chmod'.
+
     -r TEMPLATE | --remove TEMPLATE
         Delete cookie template.
 
@@ -58,7 +61,7 @@ Optional Arguments:
         The name of the template (e.g. mytemplate.sh).
 
     -x
-        Equivalent to --executable=y
+        Make TARGET executable. Equivalent to '-m +x'.
 
     -v | --verbose
         Enable verbose output.

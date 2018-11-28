@@ -99,12 +99,15 @@ function main() {
         exit 0
     fi
     
-    # >>> Make New Script Executable
-    if [[ "${executable}" == "y" || "${executable}" == "yes" ]]; then
-        sudo chmod +x "${full_target}"
-        if [[ -n "${EXEC_HOOK_CMD}" ]]; then
-            TARGET="${full_target}" eval "imsg \"Running execute hook: ${EXEC_HOOK_CMD}\""
-            TARGET="${full_target}" eval "${EXEC_HOOK_CMD}"
+    # >>> Set File Mode
+    if [[ -n "${mode}" ]]; then
+        sudo chmod "${mode}" "${full_target}"
+
+        if [[ "${mode}" == *"7"* || "${mode}" == *"+"*"x"* ]]; then
+            if [[ -n "${EXEC_HOOK_CMD}" ]]; then
+                TARGET="${full_target}" eval "imsg \"Running execute hook: ${EXEC_HOOK_CMD}\""
+                TARGET="${full_target}" eval "${EXEC_HOOK_CMD}"
+            fi
         fi
     fi
 
@@ -116,11 +119,11 @@ function main() {
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,N,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,executable:,remove:,template:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,executable:,remove:,template:,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-v] -T TEMPLATE TARGET"
+        "[-d] [-D TARGET_DIR] [-f] [-x | --executable={y|n}] [-m MODE] [-v] -T TEMPLATE TARGET"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -172,6 +175,9 @@ function parse_args() {
 	        If TEMPLATE is provided, output template contents to STDOUT.
 	        Otherwise, list available templates. 
 
+	    -m MODE | --mode MODE
+	        Sets file mode bits. Accepts all forms recognized by 'chmod'.
+
 	    -r TEMPLATE | --remove TEMPLATE
 	        Delete cookie template.
 	
@@ -179,7 +185,7 @@ function parse_args() {
 	        The name of the template (e.g. mytemplate.sh).
 	
 	    -x
-	        Equivalent to --executable=y
+	        Make TARGET executable. Equivalent to '-m +x'.
 	
 	    -v | --verbose
 	        Enable verbose output.
@@ -233,6 +239,10 @@ function parse_args() {
            -f )
                force=true
                ;;
+           -m|--mode )
+               shift
+               mode="$1"
+               ;;
            -r|--remove )
                shift
                template="$1"
@@ -246,7 +256,7 @@ function parse_args() {
                verbose=true  # LCOV_EXCL_LINE
                ;;
            -x )
-               executable="y"
+               mode="+x"
                ;;
            -- )
                shift
