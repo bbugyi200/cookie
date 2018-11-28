@@ -357,9 +357,16 @@ test_main__TARGET_ALREADY_EXISTS() {
     assertEquals ":)" "$(cat ${foobar})"
 }
 
-test_main__EXEC_HOOK_CMD() {
+test_main__EXEC_HOOK_CMD_X() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
     (main -T "${fake_temp}" -x "${foobar}" &> /dev/null)
+
+    assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
+}
+
+test_main__EXEC_HOOK_CMD_MASK() {
+    export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
+    (main -T "${fake_temp}" -m 755 "${foobar}" &> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
