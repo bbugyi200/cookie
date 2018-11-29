@@ -17,7 +17,9 @@ install: install-bashlibs install-zsh $(bindir) $(script) ## Install cookie.
 
 .PHONY: install-bashlibs
 install-bashlibs: update-bashlibs ## Install the bashlibs library.
+ifeq (,$(wildcard /usr/bin/gutils.sh))
 	$(MAKE) -C $(bashlibs) DESTDIR=$(DESTDIR) install
+endif
 
 .PHONY: update-bashlibs ## Update the bashlibs submodule.
 update-bashlibs:
