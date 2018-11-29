@@ -1,10 +1,9 @@
 #!/bin/bash
 
-mkdir lib
-cd lib || return 1
+mkdir lib > /dev/null 2>&1
 
-git clone https://github.com/bbugyi200/bashlibs
-cp bashlibs/gutils.sh ../
+sudo make update-bashlibs
+cp lib/bashlibs/gutils.sh ./
 
-git clone https://github.com/kward/shunit2
-cp shunit2/shunit2 ../
+git clone https://github.com/kward/shunit2 lib/shunit2
+cp lib/shunit2/shunit2 ./
