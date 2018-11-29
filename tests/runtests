@@ -8,7 +8,7 @@ if ! ./tests/test_cookie.sh; then
 fi
 
 printf "\n%s\n" "------- test_make.sh --------"
-if ! sudo ./tests/test_make.sh; then
+if ! sudo ./tests/test_install.sh; then
     EC=1
 fi
 
