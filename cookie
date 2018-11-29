@@ -119,11 +119,11 @@ function main() {
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,T:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,template:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,t:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,template:,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -T TEMPLATE TARGET"
+        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -t TEMPLATE TARGET"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -179,7 +179,7 @@ function parse_args() {
 	    -r TEMPLATE | --remove TEMPLATE
 	        Delete cookie template.
 	
-	    -T TEMPLATE | --template TEMPLATE
+	    -t TEMPLATE | --template TEMPLATE
 	        The name of the template (e.g. mytemplate.sh).
 	
 	    -x
@@ -241,7 +241,7 @@ function parse_args() {
                template="$1"
                remove=true
                ;;
-           -T|--template )
+           -t|--template )
                shift
                template="$1"
                ;;

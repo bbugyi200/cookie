@@ -10,7 +10,7 @@ args=(
     "-l[list templates]::filename:_files -W ${HOME}/.cookiecutters"
     "-m[set file mode]:mode:_file_modes"
     "-r[remove template]:filename:_files -W ${HOME}/.cookiecutters"
-    "-T[template file]:filename:_files -W ${HOME}/.cookiecutters"
+    "-t[template file]:filename:_files -W ${HOME}/.cookiecutters"
     "-x[make executable]"
     "-v[verbose output]"
     ":target"

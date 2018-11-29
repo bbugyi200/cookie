@@ -5,14 +5,14 @@
 ((100))# Let's take a closer look at the 'full.sh' template.<<1>>[CLEAR]cookie -e full.sh
 :4
 <<0.5>>v$h<<1.5>>[ESC]:q
-((100))# We'll now create a new script using that template.<<1>>[CLEAR]# We use the '-x' option to make the script executable.<<1>>[CLEAR]cookie -T full.sh -x demo
+((100))# We'll now create a new script using that template.<<1>>[CLEAR]# We use the '-x' option to make the script executable.<<1>>[CLEAR]cookie -t full.sh -x demo
 <<2>>((50))This is a test bash script created for the 'cookie' demo.[ESC]<<1>>:wq
 demo -h
 ((100))# Did you notice how we used 'demo' instead of './demo'?<<1>>[CLEAR]# We were able to do that because the 'demo' script was initialized in a directory on our system's PATH.<<1>>[CLEAR]# We could have instead used the '-f' option to force cookie to use the current directory.<<1>>[CLEAR]((25))clear && rm ~/Dropbox/bin/main/demo
 ((100))# Next, we'll explore the 'hw.tex' template.<<1>>[CLEAR]cookie -e hw.tex
 :3
 <<0.5>>((50))^12lv68l<<2>>[ESC]:q
-((100))# Did you notice the template variables in the 'hw.tex' template?<<1>>[CLEAR]# Let's see how they work.<<1>>[CLEAR]cookie -T hw.tex -f hw5.tex
+((100))# Did you notice the template variables in the 'hw.tex' template?<<1>>[CLEAR]# Let's see how they work.<<1>>[CLEAR]cookie -t hw.tex -f hw5.tex
 5
 CS
 314

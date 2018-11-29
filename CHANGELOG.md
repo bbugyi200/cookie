@@ -16,6 +16,7 @@ Added:
 Changed:
 
 * The syntax for startline template statements (cookie now uses `{% INSERT %}` and `{% NORMAL %}`).
+* The `-T` option to `-t`.
 
 Removed:
 
