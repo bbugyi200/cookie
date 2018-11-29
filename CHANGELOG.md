@@ -22,6 +22,10 @@ Removed:
 
 * The `--executable` option
 
+Fixes:
+
+* Only require the `-f` flag when the target is going to be executable.
+
 ### v0.1.1 (2018-11-18)
 
 Fixed:

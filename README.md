@@ -39,7 +39,9 @@ Optional Arguments:
 
     -f | --force
         Force TARGET initialization to be relative to the current
-        directory.
+        directory. This option essentially overrides the ROOT_DIR
+        configuration setting. Enabled by default for non-executable
+        targets.
 
     -h | --help
         View this help message.

@@ -40,6 +40,15 @@ test_parse_args__NOX_NOF() {
 
     assertEquals "${template}" "${my_template}"
     assertEquals "${my_target}" "${target}"
+    assertEquals true "${force}"
+}
+
+test_parse_args__X_NOF() {
+    parse_args "-t" "${my_template}" "-x" "${my_target}" &> /dev/null
+    assertEquals 0 "$?"
+
+    assertEquals "${template}" "${my_template}"
+    assertEquals "${my_target}" "${target}"
     assertEquals false "${force}"
 }
 

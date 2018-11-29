@@ -103,7 +103,7 @@ function main() {
     if [[ -n "${mode}" ]]; then
         sudo chmod "${mode}" "${full_target}"
 
-        if [[ "${mode}" == *"7"* || "${mode}" == *"+"*"x"* ]]; then
+        if [[ "${executable}" = true ]]; then
             if [[ -n "${EXEC_HOOK_CMD}" ]]; then
                 TARGET="${full_target}" eval "imsg \"Running execute hook: ${EXEC_HOOK_CMD}\""
                 TARGET="${full_target}" eval "${EXEC_HOOK_CMD}"
@@ -163,7 +163,9 @@ function parse_args() {
 	
 	    -f | --force
 	        Force TARGET initialization to be relative to the current
-	        directory.
+	        directory. This option essentially overrides the ROOT_DIR
+	        configuration setting. Enabled by default for non-executable
+	        targets.
 	
 	    -h | --help
 	        View this help message.
@@ -284,6 +286,13 @@ function parse_args() {
            imsg "The ${template} template has been deleted."
        fi
        exit 0
+    fi
+
+    if [[ "${mode}" == *"7"* || "${mode}" == *"+"*"x"* ]]; then
+        executable=true
+    else
+        executable=false
+        force=true  # ROOT_DIR is only meant to be used for executable scripts
     fi
     
     if [[ "${debug}" = true && "${verbose}" = true ]]; then
