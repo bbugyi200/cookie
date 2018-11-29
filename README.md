@@ -109,12 +109,12 @@ The configuration file can be found at `$XDG_CONFIG_HOME/cookie/config`. The fol
 # initialized relative to the current directory.
 #
 # Defaults to "./" (the current directory).
-PARENT_BIN_DIR=
+ROOT_DIR=
 
-# The target file is initialized in $PARENT_BIN_DIR/$DEFAULT_BIN_SUBDIR
+# The target file is initialized in $ROOT_DIR/$DEFAULT_TARGET_DIR
 # unless the `-D {DIR}` option is used. In which case the target file will
-# be initialized to $PARENT_BIN_DIR/{DIR}.
-DEFAULT_BIN_SUBDIR=
+# be initialized to $ROOT_DIR/{DIR}.
+DEFAULT_TARGET_DIR=
 
 # If specified, this command is evaluated after (and if) the target file
 # has its executable bit set. This can be used to create symlinks to
