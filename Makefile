@@ -7,7 +7,6 @@ script=cookie
 install: install-gutils install-zsh $(bindir) $(script)
 	cp $(script) $(bindir)/$(script)
 	chmod +x $(bindir)/$(script)
-	if [ -d /usr/share/zsh/site-functions ]; then cp ./scripts/zsh/_cookie $(DESTDIR)/usr/share/zsh/site-functions/; fi
 
 .PHONY: install-gutils
 install-gutils: clean
@@ -18,10 +17,8 @@ endif
 
 .PHONY: install-zsh
 install-zsh:
-ifneq ($(wildcard /usr/share/zsh/site-functions/.*),)
-	mkdir -p $(DESTDIR)/usr/share/zsh/site-functions/
+	@mkdir -p $(DESTDIR)/usr/share/zsh/site-functions/
 	cp ./scripts/zsh/_cookie $(DESTDIR)/usr/share/zsh/site-functions/
-endif
 
 $(bindir):
 	@mkdir -p $(bindir)
