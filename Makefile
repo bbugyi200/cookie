@@ -5,16 +5,16 @@ script=cookie
 
 
 .PHONY: install
-install: install-gutils install-zsh $(bindir) $(script)
+install: install-bashlibs install-zsh $(bindir) $(script)
 	cp $(script) $(bindir)/$(script)
 	chmod +x $(bindir)/$(script)
 
-.PHONY: install-gutils
-install-gutils: bashlibs
+.PHONY: install-bashlibs
+install-bashlibs: update-bashlibs
 	make -C $(bashlibs) DESTDIR=$(DESTDIR) install
 
-.PHONY: bashlibs
-bashlibs:
+.PHONY: update-bashlibs
+update-bashlibs:
 	git submodule update --remote $(bashlibs)
 
 .PHONY: install-zsh
@@ -29,7 +29,7 @@ uninstall:
 	@rm -f $(bindir)/$(script)
 
 .PHONY: uninstall-all
-uninstall-all: uninstall bashlibs
+uninstall-all: uninstall update-bashlibs
 	make -C $(bashlibs) uninstall
 
 check: $(runtests)
