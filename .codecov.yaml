@@ -4,3 +4,4 @@ coverage:
 ignore:
     - "scripts/*"
     - "tests/*"
+    - "shunit2"
