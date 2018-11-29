@@ -15,7 +15,7 @@ install-bashlibs: update-bashlibs
 
 .PHONY: update-bashlibs
 update-bashlibs:
-	git submodule update --remote $(bashlibs)
+	@git submodule update --remote $(bashlibs)
 
 .PHONY: install-zsh
 install-zsh:
@@ -32,5 +32,5 @@ uninstall:
 uninstall-all: uninstall update-bashlibs
 	make -C $(bashlibs) uninstall
 
-check: $(runtests)
+check: update-bashlibs $(runtests)
 	./$(runtests)

@@ -2,7 +2,7 @@
 
 mkdir lib > /dev/null 2>&1
 
-sudo make update-bashlibs
+make update-bashlibs
 cp lib/bashlibs/gutils.sh ./
 
 git clone https://github.com/kward/shunit2 lib/shunit2
