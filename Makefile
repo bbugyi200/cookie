@@ -1,5 +1,3 @@
-.DEFAULT_GOAL := help
-
 bindir=$(DESTDIR)/usr/bin
 runtests=tests/runtests
 bashlibs=lib/bashlibs
@@ -21,8 +19,8 @@ ifeq (,$(wildcard /usr/bin/gutils.sh))
 	$(MAKE) -C $(bashlibs) DESTDIR=$(DESTDIR) install
 endif
 
-.PHONY: update-bashlibs ## Update the bashlibs submodule.
-update-bashlibs:
+.PHONY: update-bashlibs
+update-bashlibs: ## Update the bashlibs submodule.
 	@git submodule update --remote $(bashlibs)
 
 .PHONY: install-zsh

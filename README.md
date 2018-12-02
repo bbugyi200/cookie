@@ -138,15 +138,15 @@ functions which serve as custom initialization commands that are specific to a
 single goal and filetype. Here are a few examples:
 
 ``` bash
-alias ainit='cookie -T template.awk -D awk -x'
-alias binit='cookie -T minimal.sh -x'
-alias Binit='cookie -T full.sh -x'
-hw() { ASSIGNMENT_NUMBER="$1" cookie -T hw.tex -f "${@:2}" HW"$1"/hw"$1".tex; }
-alias minit='cookie -T c.make -f Makefile'
-alias mtinit='cookie -T gtest.make -f Makefile'
-alias pyinit='cookie -T template.py -x'
-pytinit() { cookie -T pytest.py -f test_"$1".py; }
-alias texinit='cookie -T template.tex -f'
+alias ainit='cookie -t template.awk -D awk -x'
+alias binit='cookie -t minimal.sh -x'
+alias Binit='cookie -t full.sh -x'
+hw() { ASSIGNMENT_NUMBER="$1" cookie -t hw.tex "${@:2}" HW"$1"/hw"$1".tex; }
+alias minit='cookie -t c.make Makefile'
+alias mtinit='cookie -t gtest.make Makefile'
+alias pyinit='cookie -t template.py -x'
+pytinit() { cookie -t pytest.py test_"$1".py; }
+alias texinit='cookie -t template.tex'
 ```
 
 ## Examples
@@ -186,7 +186,7 @@ Installation is as simple as cloning the repository with `git clone https://gith
 
 ### ZSH Completion
 
-The appropriate completion function should be installed automatically. If necessary, however, you can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed by your system's `$fpath` variable (normally the `/usr/share/zsh/site-functions/` directory works).
+The appropriate completion function should be installed automatically. If necessary, however, you can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed by your system's `$fpath` variable (normally the `/usr/share/zsh/site-functions` directory works).
 
 [blog]: https://bryanbugyi.com/blog/tips-and-tricks-for-using-cookie/
 [logo]: https://raw.githubusercontent.com/bbugyi200/cookie/master/img/logo.png
