@@ -1,4 +1,9 @@
-bindir=$(DESTDIR)/usr/bin
+.DEFAULT_GOAL := help
+
+PREFIX ?= /usr
+BINDIR ?= $(PREFIX)/bin
+
+bindir=$(DESTDIR)/$(BINDIR)
 runtests=tests/runtests
 bashlibs=lib/bashlibs
 script=cookie
