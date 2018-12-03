@@ -179,6 +179,7 @@ I wrote a short [blog post][blog] describing a few of cookie's more advanced fea
 
 * [cookiecutter] - A command-line utility that creates projects from cookiecutters (project templates).
 * [j2cli] - Jinja2 Command-Line Tool.
+* [plop] - Micro-generator framework that makes it easy for an entire team to create files with a level of uniformity.
 
 ## Installation
 
@@ -201,3 +202,4 @@ The appropriate completion function should be installed automatically. If necess
 [codecov]: https://codecov.io/gh/bbugyi200/cookie/branch/master/graph/badge.svg
 [j2cli]: https://github.com/kolypto/j2cli
 [zsh-completion]: https://github.com/bbugyi200/cookie/blob/master/scripts/zsh/_cookie
+[plop]: https://github.com/amwmedia/plop
