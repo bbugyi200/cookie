@@ -8,6 +8,11 @@ runtests=tests/runtests
 bashlibs=lib/bashlibs
 project=cookie
 
+define update-bashlibs
+	git submodule update --init
+	git submodule update --remote $(bashlibs)
+endef
+
 
 .PHONY: help
 help:  ## Print this message.
@@ -19,15 +24,11 @@ install: install-bashlibs install-zsh $(bindir) $(project) ## Install cookie.
 	chmod +x $(bindir)/$(project)
 
 .PHONY: install-bashlibs
-install-bashlibs: update-bashlibs ## Install the bashlibs library.
+install-bashlibs:  ## Install the bashlibs library.
 ifeq (,$(wildcard /usr/bin/gutils.sh))
+	$(call update-bashlibs)
 	$(MAKE) -C $(bashlibs) DESTDIR=$(DESTDIR) install
 endif
-
-.PHONY: update-bashlibs
-update-bashlibs: ## Update the bashlibs submodule.
-	@git submodule update --init
-	@git submodule update --remote $(bashlibs)
 
 .PHONY: install-zsh
 install-zsh: ## Install ZSH completion function.
@@ -42,10 +43,12 @@ uninstall: ## Uninstall cookie.
 	@rm -f $(bindir)/$(project)
 
 .PHONY: uninstall-all
-uninstall-all: uninstall update-bashlibs ## Uninstall cookie and all of its dependencies.
+uninstall-all: uninstall ## Uninstall cookie and all of its dependencies.
+	$(call update-bashlibs)
 	$(MAKE) -C $(bashlibs) uninstall
 
 .PHONY: test check
 test: check
-check: update-bashlibs $(runtests) ## Run all tests.
+check: $(runtests) ## Run all tests.
+	$(call update-bashlibs)
 	./$(runtests)
