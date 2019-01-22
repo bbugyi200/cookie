@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This projec
 [Semantic Versioning](https://semver.org/), though minor breaking changes can happen in minor
 releases.
 
-### Unreleased
+### v0.2.0 (2019-01-22)
 
 Added:
 
