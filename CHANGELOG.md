@@ -22,7 +22,7 @@ Removed:
 
 * The `--executable` option
 
-Fixes:
+Fixed:
 
 * Only require the `-f` flag when the target is going to be executable.
 
