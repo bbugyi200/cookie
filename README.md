@@ -191,7 +191,7 @@ If you do not have root permissions on your machine, you can still install cooki
 ```
 make DESTDIR=/home/<user>/.local PREFIX= install
 ```
-where `<user>` should be replaced with your username. Keep in mind that for this to work `/home/<user>/.local/bin` must be added to your system's `PATH` environment variable.
+where `<user>` should be replaced with your username. Keep in mind that, for this to work, the `/home/<user>/.local/bin` directory must be added to your system's path.
 
 #### ZSH Completion
 
