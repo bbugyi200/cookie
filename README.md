@@ -183,9 +183,17 @@ I wrote a short [blog post][blog] describing a few of cookie's more advanced fea
 
 ## Installation
 
-Installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `sudo make install`.
+#### Root Installation
+If you have root permissions on your machine, installation is as simple as cloning the repository with `git clone https://github.com/bbugyi200/cookie`, traveling into the project directory (`cd cookie`), and then running `sudo make install`.
 
-### ZSH Completion
+#### User Installation
+If you do not have root permissions on your machine, you can still install cookie by using an alternate bin directory. This can be accomplished, for example, by cloning the repository and using `cd` to travel to the repository directory (as described in the previous section) and then running the following command:
+```
+make DESTDIR=/home/<user>/.local PREFIX= install
+```
+where `<user>` should be replaced with your username. Keep in mind that for this to work `/home/<user>/.local/bin` must be added to your system's `PATH` environment variable.
+
+#### ZSH Completion
 
 The appropriate completion function should be installed automatically. If necessary, however, you can enable ZSH command-line completion manually by copying the [\_cookie][zsh-completion] file to a directory listed by your system's `$fpath` variable (normally the `/usr/share/zsh/site-functions` directory works).
 

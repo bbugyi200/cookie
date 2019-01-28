@@ -27,13 +27,13 @@ install: install-bashlibs install-zsh $(bindir) $(project) ## Install cookie.
 install-bashlibs:  ## Install the bashlibs library.
 ifeq (,$(wildcard /usr/bin/gutils.sh))
 	$(call update-bashlibs)
-	$(MAKE) -C $(bashlibs) DESTDIR=$(DESTDIR) install
+	$(MAKE) -C $(bashlibs) install
 endif
 
 .PHONY: install-zsh
 install-zsh: ## Install ZSH completion function.
-	@mkdir -p $(DESTDIR)/usr/share/zsh/site-functions/
-	cp ./scripts/zsh/_cookie $(DESTDIR)/usr/share/zsh/site-functions/
+	@mkdir -p $(DESTDIR)/$(PREFIX)/share/zsh/site-functions/
+	cp ./scripts/zsh/_cookie $(DESTDIR)/$(PREFIX)/share/zsh/site-functions/
 
 $(bindir):
 	@mkdir -p $(bindir)
