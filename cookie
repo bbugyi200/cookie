@@ -82,9 +82,14 @@ function main() {
 
     get_dest_dir "${target}" "${force}"
 
-    full_target="${dest_dir}"/"${target}"
+	full_target="${dest_dir}"/"${target}"
     full_template="${COOKIE_DIR}"/"${template}"
     if ! [[ -f "${full_template}" ]]; then
+		if [[ -d "${full_template}" ]]; then
+			cp -r "${full_template}" "${full_target}"
+			imsg "Initializing the '${full_target}' directory."
+			exit 0
+		fi
         die "Template does not exist: ${full_template}"
     fi
 
@@ -119,11 +124,11 @@ function main() {
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,t:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,template:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -t TEMPLATE TARGET"
+        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE [TARGET]"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -180,9 +185,6 @@ function parse_args() {
 
 	    -r TEMPLATE | --remove TEMPLATE
 	        Delete cookie template.
-	
-	    -t TEMPLATE | --template TEMPLATE
-	        The name of the template (e.g. mytemplate.sh).
 	
 	    -x
 	        Make TARGET executable. Equivalent to '-m +x'.
@@ -243,10 +245,6 @@ function parse_args() {
                template="$1"
                remove=true
                ;;
-           -t|--template )
-               shift
-               template="$1"
-               ;;
            -v|--verbose )
                verbose=true  # LCOV_EXCL_LINE
                ;;
@@ -302,11 +300,15 @@ function parse_args() {
         # LCOV_EXCL_STOP
     fi
 
-    if [[ -z "$1" ]] || [[ -z "${template}" ]]; then
-        die "$(usage)" 2
+    if [[ -z "${template}" ]]; then
+		template="$1"; shift
     fi
     
-    target="$1"; shift
+	if [[ -n "$1" ]]; then
+		target="$1"; shift
+	else
+		target="$(basename "${template}")"
+	fi
 }
 
 function get_dest_dir() {

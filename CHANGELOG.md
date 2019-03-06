@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file. This projec
 [Semantic Versioning](https://semver.org/), though minor breaking changes can happen in minor
 releases.
 
+### Unreleased
+
+Added:
+
+* Will now automatically copy a full directory if one is given as a target.
+
+Changed:
+
+* TEMPLATE command-line option is now positional.
+
+
 ### v0.2.0 (2019-01-22)
 
 Added:

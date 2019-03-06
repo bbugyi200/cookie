@@ -8,7 +8,7 @@
 
 ## Usage
 ```
-Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] -t TEMPLATE TARGET
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE TARGET
        cookie -c
        cookie -e TEMPLATE
        cookie -h
@@ -56,9 +56,6 @@ Optional Arguments:
 
     -r TEMPLATE | --remove TEMPLATE
         Delete cookie template.
-
-    -t TEMPLATE | --template TEMPLATE
-        The name of the template (e.g. mytemplate.sh).
 
     -x
         Make TARGET executable. Equivalent to '-m +x'.
