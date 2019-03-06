@@ -300,10 +300,12 @@ function parse_args() {
         # LCOV_EXCL_STOP
     fi
 
-    if [[ -z "${template}" ]]; then
-		template="$1"; shift
-    fi
-    
+	if [[ -z "$1" ]]; then
+        die "$(usage)" 2
+	fi
+
+	template="$1"; shift
+
 	if [[ -n "$1" ]]; then
 		target="$1"; shift
 	else

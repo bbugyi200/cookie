@@ -35,7 +35,7 @@ tearDown() {
 #  Test parse_args                                                            #
 ###############################################################################
 test_parse_args__NOX_NOF() {
-    parse_args "-t" "${my_template}" "${my_target}" &> /dev/null
+    parse_args "${my_template}" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
     assertEquals "${template}" "${my_template}"
@@ -44,7 +44,7 @@ test_parse_args__NOX_NOF() {
 }
 
 test_parse_args__X_NOF() {
-    parse_args "-t" "${my_template}" "-x" "${my_target}" &> /dev/null
+    parse_args "${my_template}" "-x" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
     assertEquals "${template}" "${my_template}"
@@ -53,7 +53,7 @@ test_parse_args__X_NOF() {
 }
 
 test_parse_args__X_F() {
-    parse_args "-t" "${my_template}" "-x" "-f" "${my_target}" &> /dev/null
+    parse_args "${my_template}" "-x" "-f" "${my_target}" &> /dev/null
     assertEquals 0 "$?"
 
     assertEquals "+x" "${mode}"
@@ -321,7 +321,7 @@ test_main() {
     export DEFAULT_TARGET_DIR=
     export COOKIE_DIR=/tmp
 
-    main "-t" "${fake_temp}" "-x" "foobar" &> /dev/null
+    main "${fake_temp}" "-x" "foobar" &> /dev/null
     assertTrue "foobar is NOT a file." "[ -f foobar ]"
     assertTrue "foobar is NOT executable." "[ -x foobar ]"
 }
@@ -347,7 +347,7 @@ test_main__LIST() {
 }
 
 test_main__TEMPLATE_NOT_EXIST() {
-    (main -t fake_template.sh foobar &> /dev/null); EC=$?
+    (main fake_template.sh foobar &> /dev/null); EC=$?
     assertTrue "cookie fails to die when the template doesn't exist" "[[ ${EC} -ne 0 ]]"
 }
 
@@ -361,21 +361,21 @@ test_main__TARGET_ALREADY_EXISTS() {
 
     echo ":)" > "${foobar}"
 
-    (main "-t" "${fake_temp}" "${foobar}" &> /dev/null); EC=$?
+    (main "${fake_temp}" "${foobar}" &> /dev/null); EC=$?
     assertTrue "cookie fails when the target already exists" "[[ ${EC} -eq 0 ]]"
     assertEquals ":)" "$(cat ${foobar})"
 }
 
 test_main__EXEC_HOOK_CMD_X() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
-    (main -t "${fake_temp}" -x "${foobar}" &> /dev/null)
+    (main "${fake_temp}" -x "${foobar}" &> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
 
 test_main__EXEC_HOOK_CMD_MASK() {
     export EXEC_HOOK_CMD="echo \"Hook Output: \${TARGET}\" > ${foobaz}"
-    (main -t "${fake_temp}" -m 755 "${foobar}" &> /dev/null)
+    (main "${fake_temp}" -m 755 "${foobar}" &> /dev/null)
 
     assertEquals "Hook Output: ${foobar}" "$(cat "${foobaz}")"
 }
@@ -383,7 +383,7 @@ test_main__EXEC_HOOK_CMD_MASK() {
 test_main__BIN_SUBDIR() {
     export ROOT_DIR=/tmp
 
-    (main "-t" "${fake_temp}" "-D" "foodir" "foobar" &> /dev/null); EC=$?
+    (main "${fake_temp}" "-D" "foodir" "foobar" &> /dev/null); EC=$?
     assertTrue "cookie fails when using -D option" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie does not respect the -D option" "[[ -f /tmp/foodir/foobar ]]"
 }
@@ -391,7 +391,7 @@ test_main__BIN_SUBDIR() {
 test_main__DEEP_TARGET() {
     export ROOT_DIR=/tmp
 
-    (main "-t" "${fake_temp}" "foo/bar" &> /dev/null); EC=$?
+    (main "${fake_temp}" "foo/bar" &> /dev/null); EC=$?
     assertTrue "cookie fails when using deep target" "[[ ${EC} -eq 0 ]]"
     assertTrue "cookie fails to initialize deep target" "[[ -f /tmp/foo/bar ]]"
 
@@ -401,9 +401,24 @@ test_main__DEEP_TARGET() {
 test_main__MODE() {
     export ROOT_DIR=/tmp
 
-    (main "-t" "${fake_temp}" "-m" "666" "${foobar}"); EC=$?
+    (main "${fake_temp}" "-m" "666" "${foobar}"); EC=$?
     assertTrue "cookie fails when using --mode option" "[[ ${EC} -eq 0 ]]"
     assertEquals "666" "$(stat -c "%a" "${foobar}")"
+}
+
+test_main__TEMPLATE_IS_DIRECTORY() {
+    export ROOT_DIR=/tmp
+
+	(main "$(basename "${tmpdir}")" "${foobar}"); EC=$?
+
+    assertTrue "cookie fails to copy template directory" "[[ -d ${foobar} ]]"
+}
+
+test_main_NO_TARGET() {
+    export ROOT_DIR=/var/tmp
+
+	(main "${fake_temp}"); EC=$?
+	assertTrue "cookie fails when target is not given" "[[ -f /var/tmp/$(basename ${fake_temp}) ]]"
 }
 
 source shunit2
