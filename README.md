@@ -8,7 +8,7 @@
 
 ## Usage
 ```
-Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE TARGET
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE [TARGET]
        cookie -c
        cookie -e TEMPLATE
        cookie -h
