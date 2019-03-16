@@ -11,6 +11,7 @@ project=cookie
 define update-bashlibs
 	git submodule update --init
 	git submodule update --remote $(bashlibs)
+	chmod +x $(bashlibs)/*.sh
 endef
 
 

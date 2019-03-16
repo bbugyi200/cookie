@@ -421,4 +421,6 @@ test_main_NO_TARGET() {
 	assertTrue "cookie fails when target is not given" "[[ -f /var/tmp/$(basename ${fake_temp}) ]]"
 }
 
-source shunit2
+if [ -f "shunit2" ];then
+	source shunit2
+fi
