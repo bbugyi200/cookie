@@ -208,3 +208,13 @@ The appropriate completion function should be installed automatically. If necess
 [j2cli]: https://github.com/kolypto/j2cli
 [zsh-completion]: https://github.com/bbugyi200/cookie/blob/master/scripts/zsh/_cookie
 [plop]: https://github.com/amwmedia/plop
+
+#### macOS
+
+MacOS uses a different version of getopt than Linux does. You can install a GNU version of getopt and set it as the default getopt for your system using brew:
+
+```
+brew install gnu-getopt
+brew link --force gnu-getopt
+```
+See this [Stack Overflow answer](https://stackoverflow.com/questions/12152077/how-can-i-make-bash-deal-with-long-param-using-getopt-command-in-mac) before modifying your `gnu-getopt`.
