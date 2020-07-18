@@ -290,7 +290,6 @@ function parse_args() {
         executable=true
     else
         executable=false
-        force=true  # ROOT_DIR is only meant to be used for executable scripts
     fi
     
     if [[ "${debug}" = true && "${verbose}" = true ]]; then
