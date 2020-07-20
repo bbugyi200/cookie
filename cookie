@@ -100,7 +100,7 @@ function main() {
         cp "${full_template}" "${full_target}"
     else
         imsg "The '${full_target}' script already exists."
-        eval "$(editor_cmd "" "" "NORMAL" "${full_target}")"
+        maybe_edit "$(editor_cmd "" "" "NORMAL" "${full_target}")"
         exit 0
     fi
     
@@ -120,15 +120,21 @@ function main() {
     template_engine "${contents}"
     echo "${new_contents}" > "${full_target}"
 
-    eval "$(editor_cmd "${start_line}" "${start_col}" "${mode}" "${full_target}")"
+    maybe_edit "$(editor_cmd "${start_line}" "${start_col}" "${mode}" "${full_target}")"
+}
+
+function maybe_edit() {
+    if [[ "${quiet}" != true ]]; then
+        eval "$@"
+    fi
 }
 
 function parse_args() {
-    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,verbose,use-extension:" -- "$@")"
+    eval set -- "$(getopt -o "d,c,D:,e:,f,F:,h,l,m:,r:,q,v,x" -l "config,debug,docs:,bin-subdir:,edit:,help,list,mode:,remove:,quiet,verbose,use-extension:" -- "$@")"
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE [TARGET]"
+        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-q] [-x] TEMPLATE [TARGET]"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -185,12 +191,15 @@ function parse_args() {
 
 	    -r TEMPLATE | --remove TEMPLATE
 	        Delete cookie template.
+
+        -q | --quiet
+            Just initialize the new script without opening it up in an editor.
+
+	    -v | --verbose
+	        Enable verbose output.
 	
 	    -x
 	        Make TARGET executable. Equivalent to '-m +x'.
-	
-	    -v | --verbose
-	        Enable verbose output.
 	EOM
     
     force=false
@@ -244,6 +253,9 @@ function parse_args() {
                shift
                template="$1"
                remove=true
+               ;;
+           -q|--quiet )
+               quiet=true
                ;;
            -v|--verbose )
                verbose=true  # LCOV_EXCL_LINE
