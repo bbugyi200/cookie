@@ -134,7 +134,7 @@ function parse_args() {
     
     # LCOV_EXCL_START
     export USAGE_GRAMMAR=(
-        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-q] [-x] TEMPLATE [TARGET]"
+        "[-d] [-D TARGET_DIR] [-f] [-m MODE] [-q] [-v] [-x] TEMPLATE [TARGET]"
         "-c"
         "-e TEMPLATE"
         "-h"
@@ -192,8 +192,8 @@ function parse_args() {
 	    -r TEMPLATE | --remove TEMPLATE
 	        Delete cookie template.
 
-        -q | --quiet
-            Just initialize the new script without opening it up in an editor.
+	    -q | --quiet
+	        Just initialize the new script without opening it up in an editor.
 
 	    -v | --verbose
 	        Enable verbose output.

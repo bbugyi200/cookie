@@ -8,7 +8,7 @@
 
 ## Usage
 ```
-Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-v] [-x] TEMPLATE [TARGET]
+Usage: cookie [-d] [-D TARGET_DIR] [-f] [-m MODE] [-q] [-v] [-x] TEMPLATE [TARGET]
        cookie -c
        cookie -e TEMPLATE
        cookie -h
@@ -57,11 +57,14 @@ Optional Arguments:
     -r TEMPLATE | --remove TEMPLATE
         Delete cookie template.
 
-    -x
-        Make TARGET executable. Equivalent to '-m +x'.
+    -q | --quiet
+        Just initialize the new script without opening it up in an editor.
 
     -v | --verbose
         Enable verbose output.
+
+    -x
+        Make TARGET executable. Equivalent to '-m +x'.
 ```
 
 ## Templates
