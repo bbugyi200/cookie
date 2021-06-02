@@ -11,7 +11,7 @@ EOM
 
 # ---------- Source Libraries / Configs ----------
 # ===== Global Utilities =====
-source gutils.sh
+source bugyi.sh
 
 [ -d "${MY_XDG_CONFIG}" ] || mkdir -p "${MY_XDG_CONFIG}"
 
