@@ -395,7 +395,7 @@ function template_engine() {
         evalue="$(eval "echo \"\$${evar}\"")"
         if [[ -z "${evalue}" ]]; then
             read -p "${evar}: " evalue <&5
-            eval "${evar}=${evalue}"
+            eval "${evar}=\"${evalue}\""
         fi
     
         new_contents="$(echo "${new_contents}" | sed "s/{{[ ]*${evar}[ ]*}}/${evalue}/g")"
